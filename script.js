@@ -43,11 +43,27 @@ function selectCollege(college) {
     document.getElementById('suggestions').style.display = 'none'; // Hide suggestions
 }
 
-document.getElementById('college-search').addEventListener('input', () => {
+// Debounce function
+function debounce(func, delay) {
+    let timeoutId;
+    return function(...args) {
+        if (timeoutId) {
+            clearTimeout(timeoutId);
+        }
+        timeoutId = setTimeout(() => {
+            func.apply(null, args);
+        }, delay);
+    };
+}
+
+const onInputChange = () => {
     const searchTerm = document.getElementById('college-search').value.toLowerCase();
     const filteredColleges = collegesData.filter(([college]) => college.toLowerCase().includes(searchTerm));
     showSuggestions(filteredColleges); // Show matching colleges
-});
+};
+
+// Use debounce to limit the frequency of input events
+document.getElementById('college-search').addEventListener('input', debounce(onInputChange, 300)); // 300ms delay
 
 // Fetch and populate colleges
 fetchSheetData().then(data => {
