@@ -129,5 +129,34 @@ button:hover {
         font-size: 24px;
         color: #b58345; /* Spinner color */
     }
+    /* Suggestions Styles */
+    #suggestions {
+        position: absolute;
+        z-index: 1000;
+        width: 300px; /* Set a fixed width for the dropdown */
+        max-height: 200px;
+        overflow-y: auto;
+        border: 1px solid #ddd; /* Light border for suggestions */
+        border-radius: 5px;
+        background-color: #ffffff; /* White background for suggestions */
+        display: none;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); /* Add a subtle shadow for depth */
+    }
 
+    .suggestion-item {
+        padding: 12px;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+        border-bottom: 1px solid #eee; /* Optional: Add a divider between items */
+    }
+
+    .suggestion-item:last-child {
+        border-bottom: none; /* Remove border from last item */
+    }
+
+    .suggestion-item:hover {
+        background-color: #f0f0f0; /* Light grey on hover */
+    }
+
+    
 }
