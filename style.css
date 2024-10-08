@@ -1,145 +1,143 @@
-    /* General Styles */
-    body {
-        font-family: 'Arial', sans-serif;
-        margin: 0;
-        padding: 0;
-        background-color: #f8f1e7; /* Cream background color */
-        color: #333; /* Dark text color */
-    }
+/* General Styles */
+body {
+    font-family: 'Arial', sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f8f1e7; /* Cream background color */
+    color: #333; /* Dark text color */
+}
 
+.main-container {
+    display: flex;
+    justify-content: space-between;
+    padding: 40px;
+    max-width: 1200px;
+    margin: 0 auto; /* Center align main container */
+}
+
+.sidebar {
+    width: 300px;
+    padding: 20px;
+    background-color: #ffffff; /* White sidebar for contrast */
+    border-radius: 8px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); /* Light shadow */
+    margin-right: 20px; /* Space between sidebar and calculator */
+}
+
+h1, h2 {
+    color: #b58345; /* Cream color for headings */
+}
+
+.calculator-container {
+    flex-grow: 1; /* Allow calculator to fill remaining space */
+    text-align: center;
+    background-color: #ffffff; /* White background for calculator */
+    padding: 40px;
+    border-radius: 8px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); /* Light shadow */
+}
+
+/* Form Elements */
+/* Form Elements */
+/* Form Elements */
+label {
+    font-weight: bold; /* Make labels stand out */
+}
+
+input, select {
+    padding: 14px;
+    margin: 10px 0; /* Less margin for a more compact look */
+    border: 1px solid #b58345; /* Accent border */
+    border-radius: 5px;
+    background-color: #fdf6e3; /* Light cream background for inputs */
+    color: #333; /* Dark text for readability */
+    font-size: 1em;
+    width: 100%; /* Ensure both input and select are full width */
+    transition: border-color 0.3s ease;
+}
+
+input:focus, select:focus {
+    border-color: #996b3c; /* Darker cream on focus */
+    outline: none; /* Remove outline */
+}
+
+
+
+/* Button Styles */
+button {
+    padding: 12px 20px;
+    background-color: #b58345; /* Button color */
+    color: #ffffff; /* White text for buttons */
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    margin-top: 15px; /* Space above button */
+}
+
+button:hover {
+    background-color: #996b3c; /* Darker button color on hover */
+}
+
+/* Cost Display */
+#cost-display-container {
+    margin-top: 20px;
+    padding: 10px;
+    border: 1px solid #b58345; /* Accent border */
+    border-radius: 5px;
+    background-color: #f4e3d7; /* Light cream background for cost display */
+    font-weight: bold;
+}
+
+#cost-breakdown {
+    margin-top: 20px;
+}
+
+#breakdown-list {
+    list-style: none;
+    padding: 0;
+}
+
+.suggestion-item {
+    padding: 12px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    border-bottom: 1px solid #eee; /* Optional: Add a divider between items */
+}
+
+.suggestion-item:last-child {
+    border-bottom: none; /* Remove border from last item */
+}
+
+.suggestion-item:hover {
+    background-color: #f0f0f0; /* Light grey on hover */
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
     .main-container {
-        display: flex;
-        justify-content: space-between;
-        padding: 40px;
-        max-width: 1200px;
-        margin: 0 auto; /* Center align main container */
+        flex-direction: column; /* Stack elements on smaller screens */
+        align-items: center; /* Center align */
     }
 
     .sidebar {
-        width: 300px;
-        padding: 20px;
-        background-color: #ffffff; /* White sidebar for contrast */
-        border-radius: 8px;
-        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); /* Light shadow */
-        margin-right: 20px; /* Space between sidebar and calculator */
+        width: 100%; /* Full width for sidebar on small screens */
+        margin: 0; /* Remove margin */
+        margin-bottom: 20px; /* Space below sidebar */
     }
 
-    h1, h2 {
-        color: #b58345; /* Cream color for headings */
-    }
-
-    .calculator-container {
-        flex-grow: 1; /* Allow calculator to fill remaining space */
-        text-align: center;
-        background-color: #ffffff; /* White background for calculator */
-        padding: 40px;
-        border-radius: 8px;
-        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); /* Light shadow */
-    }
-
-    /* Form Elements */
-    label {
-        font-weight: bold; /* Make labels stand out */
-    }
-
-    select, input {
-        padding: 14px;
-        margin: 10px 0; /* Less margin for a more compact look */
-        border: 1px solid #b58345; /* Accent border */
-        border-radius: 5px;
-        background-color: #fdf6e3; /* Light cream background for inputs */
-        color: #333; /* Dark text for readability */
-        font-size: 1em;
-        width: 100%;
-        transition: border-color 0.3s ease;
-    }
-
-    select:focus, input:focus {
-        border-color: #996b3c; /* Darker cream on focus */
-        outline: none; /* Remove outline */
-    }
-
-    /* Button Styles */
-    button {
-        padding: 12px 20px;
-        background-color: #b58345; /* Button color */
-        color: #ffffff; /* White text for buttons */
-        border: none;
-        border-radius: 5px;
-        cursor: pointer;
-        transition: background-color 0.3s ease;
-        margin-top: 15px; /* Space above button */
-    }
-
-    button:hover {
-        background-color: #996b3c; /* Darker button color on hover */
-    }
-
-    /* Cost Display */
-    #cost-display-container {
-        margin-top: 20px;
-        padding: 10px;
-        border: 1px solid #b58345; /* Accent border */
-        border-radius: 5px;
-        background-color: #f4e3d7; /* Light cream background for cost display */
-        font-weight: bold;
-    }
-
-    /* Suggestions Styles */
+    /* Suggestions Styles for mobile */
     #suggestions {
+        width: calc(100% - 32px); /* Ensure it fits the container with padding */
+        max-width: 100%; /* Full width for dropdown on small screens */
+    }
+
+    #loading-spinner {
         position: absolute;
-        z-index: 1000;
-        width: calc(100% - 32px); /* Subtract some padding to fit within the container */
-        max-width: 400px; /* Increase maximum width */
-        max-height: 200px;
-        overflow-y: auto;
-        border: 1px solid #ddd; /* Light border for suggestions */
-        border-radius: 5px;
-        background-color: #ffffff; /* White background for suggestions */
-        display: none;
-        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); /* Add a subtle shadow for depth */
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        font-size: 24px;
+        color: #b58345; /* Spinner color */
     }
-
-    .suggestion-item {
-        padding: 12px;
-        cursor: pointer;
-        transition: background-color 0.3s ease;
-        border-bottom: 1px solid #eee; /* Optional: Add a divider between items */
-    }
-
-    .suggestion-item:last-child {
-        border-bottom: none; /* Remove border from last item */
-    }
-
-    .suggestion-item:hover {
-        background-color: #f0f0f0; /* Light grey on hover */
-    }
-
-    /* Responsive Design */
-    @media (max-width: 768px) {
-        .main-container {
-            flex-direction: column; /* Stack elements on smaller screens */
-            align-items: center; /* Center align */
-        }
-
-        .sidebar {
-            width: 100%; /* Full width for sidebar on small screens */
-            margin: 0; /* Remove margin */
-            margin-bottom: 20px; /* Space below sidebar */
-        }
-
-        /* Suggestions Styles for mobile */
-        #suggestions {
-            width: calc(100% - 32px); /* Ensure it fits the container with padding */
-            max-width: 100%; /* Full width for dropdown on small screens */
-        }
-
-        #loading-spinner {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            font-size: 24px;
-            color: #b58345; /* Spinner color */
-        }
-    }
+}
