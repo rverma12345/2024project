@@ -43,7 +43,6 @@ function selectCollege(college) {
     document.getElementById('suggestions').style.display = 'none'; // Hide suggestions
 }
 
-// Debounce function
 function debounce(func, delay) {
     let timeoutId;
     return function(...args) {
@@ -58,25 +57,45 @@ function debounce(func, delay) {
 
 const onInputChange = () => {
     const searchTerm = document.getElementById('college-search').value.toLowerCase();
-    const filteredColleges = collegesData.filter(([college]) => college.toLowerCase().includes(searchTerm));
-    showSuggestions(filteredColleges); // Show matching colleges
+    // Only show suggestions if the input is not empty
+    if (searchTerm) {
+        const filteredColleges = collegesData.filter(([college]) => college.toLowerCase().includes(searchTerm));
+        showSuggestions(filteredColleges); // Show matching colleges
+    } else {
+        document.getElementById('suggestions').style.display = 'none'; // Hide if input is empty
+    }
 };
 
 // Use debounce to limit the frequency of input events
 document.getElementById('college-search').addEventListener('input', debounce(onInputChange, 300)); // 300ms delay
+
+// Show suggestions when input is focused
+document.getElementById('college-search').addEventListener('focus', () => {
+    const searchTerm = document.getElementById('college-search').value.toLowerCase();
+    if (searchTerm) {
+        const filteredColleges = collegesData.filter(([college]) => college.toLowerCase().includes(searchTerm));
+        showSuggestions(filteredColleges);
+    }
+});
+
+// Hide suggestions when input is blurred
+document.getElementById('college-search').addEventListener('blur', () => {
+    setTimeout(() => {
+        document.getElementById('suggestions').style.display = 'none';
+    }, 100); // Delay to allow for click on suggestion
+});
 
 // Fetch and populate colleges
 fetchSheetData().then(data => {
     if (data && data.length > 0) {
         const [headers, ...rows] = data; // Skip the first row if it contains headers
         collegesData = rows; // Store data for lookup
-        showSuggestions(rows); // Show all colleges initially
     } else {
         console.error('No data found or invalid range.');
     }
 });
 
-// Event listeners
+// Calculate cost display
 document.getElementById('calculate-btn').addEventListener('click', updateCostDisplay);
 
 function updateCostDisplay() {
@@ -120,17 +139,3 @@ function updateCostDisplay() {
         costDisplay.textContent = 'Please select a college.';
     }
 }
-
-document.getElementById('calculate-btn').addEventListener('click', () => {
-    const selectedCollege = document.getElementById('college-search').value;
-    if (selectedCollege) {
-        const collegeData = collegesData.find(([college]) => college.toLowerCase() === selectedCollege.toLowerCase());
-        if (collegeData) {
-            updateCostDisplay(); // Call your function to update cost display
-        } else {
-            alert('Please select a valid college from the suggestions.');
-        }
-    } else {
-        alert('Please enter a college name to search.');
-    }
-});
