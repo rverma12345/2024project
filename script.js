@@ -90,52 +90,58 @@ fetchSheetData().then(data => {
     if (data && data.length > 0) {
         const [headers, ...rows] = data; // Skip the first row if it contains headers
         collegesData = rows; // Store data for lookup
-    } else {
-        console.error('No data found or invalid range.');
     }
 });
 
-// Calculate cost display
+document.getElementById('living-arrangement').addEventListener('change', function() {
+    const housingCostInput = document.getElementById('housing-cost');
+    const housingCostLabel = document.getElementById('housing-cost-label');
+    const commutingDetails = document.getElementById('commuting-details');
+
+    if (this.value === 'on-campus') {
+        housingCostInput.style.display = 'block';
+        housingCostLabel.style.display = 'block';
+        commutingDetails.style.display = 'none';
+    } else {
+        housingCostInput.style.display = 'none';
+        housingCostLabel.style.display = 'none';
+        commutingDetails.style.display = 'block';
+        housingCostInput.value = ''; // Clear the input if switching to commuting
+    }
+});
+
 document.getElementById('calculate-btn').addEventListener('click', updateCostDisplay);
 
 function updateCostDisplay() {
-    const residencySelect = document.getElementById('residency-select');
-    const livingArrangementSelect = document.getElementById('living-arrangement');
-    const costDisplay = document.getElementById('cost-display');
-    const collegeSearch = document.getElementById('college-search');
+    let cost = 0; // Initialize total cost
 
-    const selectedCollege = collegeSearch.value;
-    const residency = residencySelect.value;
-    const livingArrangement = livingArrangementSelect.value;
+    const tuitionFee = parseFloat(document.getElementById('tuition-fee').value) || 0;
+    const collegeCostIncrease = parseFloat(document.getElementById('college-cost-increase').value) || 0;
+    const attendanceYears = parseInt(document.getElementById('attendance-years').value) || 0;
+    const foodCost = parseFloat(document.getElementById('food-cost').value) || 0;
+    const miscellaneousCost = parseFloat(document.getElementById('miscellaneous-cost').value) || 0;
 
-    if (selectedCollege) {
-        const collegeData = collegesData.find(([college]) => college === selectedCollege);
+    cost += tuitionFee; // Add tuition fee
 
-        if (collegeData) {
-            const [ , outOfStateCost, , , inStateCost, onCampusCost ] = collegeData;
-            let cost = residency === 'in-state' ? parseFloat(inStateCost) : parseFloat(outOfStateCost);
-            const foodCost = parseFloat(document.getElementById('food-cost').value) || 0;
-            const attendanceYears = parseFloat(document.getElementById('attendance-years').value) || 0;
-            const costIncreaseRate = parseFloat(document.getElementById('college-cost-increase').value) || 0;
-
-            cost += foodCost * attendanceYears; // Add food costs
-            cost += (cost * (costIncreaseRate / 100)) * attendanceYears; // Add cost increase over years
-
-            if (livingArrangement === 'on-campus') {
-                cost += parseFloat(onCampusCost);
-            } else if (livingArrangement === 'commuting') {
-                const miles = parseFloat(document.getElementById('miles').value) || 0;
-                const gasCost = parseFloat(document.getElementById('gas-cost').value) || 0;
-                const averageMPG = 25; // Assume average miles per gallon
-                const totalCommuteCost = (miles / averageMPG) * gasCost;
-                cost += totalCommuteCost;
-            }
-
-            costDisplay.textContent = `Total Cost: $${cost.toFixed(2)}`;
-        } else {
-            costDisplay.textContent = 'Selected college not found.';
-        }
-    } else {
-        costDisplay.textContent = 'Please select a college.';
+    // Calculate the total cost with increase
+    for (let year = 0; year < attendanceYears; year++) {
+        cost += tuitionFee * Math.pow(1 + collegeCostIncrease / 100, year); // Compound increase
     }
+
+    cost += foodCost; // Add food cost
+    cost += miscellaneousCost; // Add miscellaneous expenses
+
+    const livingArrangement = document.getElementById('living-arrangement').value;
+    if (livingArrangement === 'on-campus') {
+        const userHousingCost = parseFloat(document.getElementById('housing-cost').value) || 0;
+        cost += userHousingCost; // Add user-defined housing cost
+    } else if (livingArrangement === 'commuting') {
+        const miles = parseFloat(document.getElementById('miles').value) || 0;
+        const gasCost = parseFloat(document.getElementById('gas-cost').value) || 0;
+        const averageMPG = 25; // Assume average miles per gallon
+        const totalCommuteCost = (miles / averageMPG) * gasCost;
+        cost += totalCommuteCost; // Add commuting cost
+    }
+
+    document.getElementById('cost-display').textContent = `Total Cost: $${cost.toFixed(2)}`;
 }
