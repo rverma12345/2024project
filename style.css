@@ -1,10 +1,10 @@
 /* General Styles */
 body {
-    font-family: 'Arial', sans-serif;
+    font-family: 'Helvetica Neue', Arial, sans-serif;
     margin: 0;
     padding: 0;
-    background-color: #f8f1e7; /* Cream background color */
-    color: #333; /* Dark text color */
+    background-color: #ffffff; /* Clean white background */
+    color: #333; /* Dark text for contrast */
 }
 
 .main-container {
@@ -15,94 +15,96 @@ body {
     margin: 0 auto; /* Center align main container */
 }
 
+/* Sidebar */
 .sidebar {
     width: 300px;
     padding: 20px;
-    background-color: #ffffff; /* White sidebar for contrast */
-    border-radius: 8px;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); /* Light shadow */
-    margin-right: 20px; /* Space between sidebar and calculator */
+    background-color: #f4f4f4; /* Light gray for sidebar */
+    border-radius: 12px; /* Rounded corners */
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+    margin-right: 30px; /* Space between sidebar and calculator */
 }
 
+/* Headings */
 h1, h2 {
-    color: #b58345; /* Cream color for headings */
+    color: #007BFF; /* Blue for headings */
+    margin-bottom: 1rem;
 }
 
+/* Calculator Container */
 .calculator-container {
     flex-grow: 1; /* Allow calculator to fill remaining space */
     text-align: center;
-    background-color: #ffffff; /* White background for calculator */
+    background-color: #ffffff; /* White background */
     padding: 40px;
-    border-radius: 8px;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); /* Light shadow */
+    border-radius: 12px; /* Rounded corners */
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1); /* Subtle shadow */
 }
 
-/* Form Elements */
-/* Form Elements */
 /* Form Elements */
 label {
     font-weight: bold; /* Make labels stand out */
+    margin-bottom: 0.5rem; /* Space between label and input */
+    display: block; /* Ensure labels take full width */
 }
 
 input, select {
-    padding: 14px;
-    margin: 10px 0; /* Less margin for a more compact look */
-    border: 1px solid #b58345; /* Accent border */
-    border-radius: 5px;
-    background-color: #fdf6e3; /* Light cream background for inputs */
-    color: #333; /* Dark text for readability */
+    padding: 16px;
+    margin: 10px 0; /* Margin for inputs */
+    border: 1px solid #007BFF; /* Blue border */
+    border-radius: 8px; /* Rounded corners */
+    background-color: #f0f0f0; /* Light gray background */
+    color: #333; /* Dark text */
     font-size: 1em;
-    width: 100%; /* Ensure both input and select are full width */
+    width: 100%; /* Full width */
     transition: border-color 0.3s ease;
 }
 
 input:focus, select:focus {
-    border-color: #996b3c; /* Darker cream on focus */
+    border-color: #0056b3; /* Darker blue on focus */
     outline: none; /* Remove outline */
 }
 
-
-
 /* Button Styles */
 button {
-    padding: 12px 20px;
-    background-color: #b58345; /* Button color */
-    color: #ffffff; /* White text for buttons */
+    padding: 15px 30px; /* Padding for buttons */
+    background-color: #007BFF; /* Button color */
+    color: #ffffff; /* White text */
     border: none;
-    border-radius: 5px;
+    border-radius: 8px; /* Rounded corners */
     cursor: pointer;
-    transition: background-color 0.3s ease;
-    margin-top: 15px; /* Space above button */
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    margin-top: 20px; /* Space above button */
+    font-size: 1em; /* Consistent font size */
 }
 
 button:hover {
-    background-color: #996b3c; /* Darker button color on hover */
+    background-color: #0056b3; /* Darker blue on hover */
+    transform: translateY(-2px); /* Lift effect */
 }
 
 /* Cost Display */
 #cost-display-container {
     margin-top: 20px;
-    padding: 10px;
-    border: 1px solid #b58345; /* Accent border */
-    border-radius: 5px;
-    background-color: #f4e3d7; /* Light cream background for cost display */
+    padding: 15px; /* Padding */
+    border: 1px solid #007BFF; /* Blue border */
+    border-radius: 8px; /* Rounded corners */
+    background-color: #e7f1ff; /* Light blue background */
     font-weight: bold;
+    text-align: center; /* Center align text */
 }
 
-#cost-breakdown {
-    margin-top: 20px;
-}
-
+/* Suggestions */
 #breakdown-list {
     list-style: none;
     padding: 0;
 }
 
 .suggestion-item {
-    padding: 12px;
+    padding: 15px; /* Increased padding */
     cursor: pointer;
     transition: background-color 0.3s ease;
-    border-bottom: 1px solid #eee; /* Optional: Add a divider between items */
+    border-bottom: 1px solid #eee; /* Divider */
 }
 
 .suggestion-item:last-child {
@@ -116,20 +118,19 @@ button:hover {
 /* Responsive Design */
 @media (max-width: 768px) {
     .main-container {
-        flex-direction: column; /* Stack elements on smaller screens */
+        flex-direction: column; /* Stack elements */
         align-items: center; /* Center align */
     }
 
     .sidebar {
-        width: 100%; /* Full width for sidebar on small screens */
+        width: 100%; /* Full width for sidebar */
         margin: 0; /* Remove margin */
         margin-bottom: 20px; /* Space below sidebar */
     }
 
-    /* Suggestions Styles for mobile */
     #suggestions {
-        width: calc(100% - 32px); /* Ensure it fits the container with padding */
-        max-width: 100%; /* Full width for dropdown on small screens */
+        width: calc(100% - 32px); /* Fit suggestions to container */
+        max-width: 100%; /* Full width for dropdown */
     }
 
     #loading-spinner {
@@ -138,6 +139,6 @@ button:hover {
         left: 50%;
         transform: translate(-50%, -50%);
         font-size: 24px;
-        color: #b58345; /* Spinner color */
+        color: #007BFF; /* Spinner color */
     }
 }
