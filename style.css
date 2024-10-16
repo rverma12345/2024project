@@ -104,41 +104,16 @@ button:hover {
     padding: 15px; /* Increased padding */
     cursor: pointer;
     transition: background-color 0.3s ease;
-    border-bottom: 1px solid #eee; /* Divider */
-}
-
-.suggestion-item:last-child {
-    border-bottom: none; /* Remove border from last item */
+    border-bottom: 1px solid #f0f0f0; /* Subtle separator */
 }
 
 .suggestion-item:hover {
-    background-color: #f0f0f0; /* Light grey on hover */
+    background-color: #f0f0f0; /* Highlight on hover */
 }
 
-/* Responsive Design */
-@media (max-width: 768px) {
-    .main-container {
-        flex-direction: column; /* Stack elements */
-        align-items: center; /* Center align */
-    }
-
-    .sidebar {
-        width: 100%; /* Full width for sidebar */
-        margin: 0; /* Remove margin */
-        margin-bottom: 20px; /* Space below sidebar */
-    }
-
-    #suggestions {
-        width: calc(100% - 32px); /* Fit suggestions to container */
-        max-width: 100%; /* Full width for dropdown */
-    }
-
-    #loading-spinner {
-        position: absolute;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-        font-size: 24px;
-        color: #007BFF; /* Spinner color */
-    }
+/* Spinner */
+#loading-spinner {
+    text-align: center;
+    font-size: 1.5em; /* Increase spinner font size */
+    margin-top: 20px; /* Space above spinner */
 }
