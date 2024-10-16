@@ -1,147 +1,149 @@
-const apiKey = 'AIzaSyBuk_AmRSgWnPHIc79Gj-5eTcfJdLE4x8w'; // Your API key
-const sheetId = '1cLuRfqVkfmq-GwzFXwq07zxyMraJsZx88djOGBX-Z8k'; // Your Google Sheets ID
-const range = 'Sheet1!A:F'; // Adjust the range as needed
+const apiUrl = "https://api.data.gov/ed/collegescorecard/v1/schools.json?api_key=QpcoJvRbjb8tW4mMHeFLs03clHditVf3AeppBdJC&fields=school.name,latest.cost.tuition.out_of_state,latest.cost.tuition.in_state";
+let collegesData = [];
 
-let collegesData = []; // Array to store fetched data
-
-async function fetchSheetData() {
+async function fetchCollegesData() {
     try {
-        const response = await fetch(`https://sheets.googleapis.com/v4/spreadsheets/${sheetId}/values/${range}?key=${apiKey}`);
+        const response = await fetch(apiUrl);
         const data = await response.json();
 
-        if (data.values && data.values.length > 0) {
-            return data.values;
+        if (data.results && data.results.length > 0) {
+            collegesData = data.results.map(college => ({
+                name: college["school.name"],
+                tuitionOutOfState: college["latest.cost.tuition.out_of_state"],
+                tuitionInState: college["latest.cost.tuition.in_state"]
+            }));
         } else {
-            console.error('No values found in the sheet.');
-            return [];
+            console.error('No colleges found.');
         }
     } catch (error) {
         console.error('Error fetching data:', error);
     }
 }
 
-function showSuggestions(colleges) {
-    const suggestionsContainer = document.getElementById('suggestions');
-    suggestionsContainer.innerHTML = ''; // Clear previous suggestions
-    if (colleges.length > 0) {
-        suggestionsContainer.style.display = 'block';
-        colleges.forEach(([college]) => {
-            const item = document.createElement('div');
-            item.classList.add('suggestion-item');
-            item.textContent = college;
-            item.onclick = () => selectCollege(college); // Add click event to select college
-            suggestionsContainer.appendChild(item);
-        });
-    } else {
-        suggestionsContainer.style.display = 'none'; // Hide if no suggestions
-    }
-}
-
-function selectCollege(college) {
-    const searchInput = document.getElementById('college-search');
-    searchInput.value = college; // Set input value to the selected college
-    document.getElementById('suggestions').style.display = 'none'; // Hide suggestions
-}
-
+// Debounce function
 function debounce(func, delay) {
-    let timeoutId;
-    return function(...args) {
-        if (timeoutId) {
-            clearTimeout(timeoutId);
-        }
-        timeoutId = setTimeout(() => {
-            func.apply(null, args);
-        }, delay);
+    let timeout;
+    return function (...args) {
+        clearTimeout(timeout);
+        timeout = setTimeout(() => func.apply(this, args), delay);
     };
 }
 
+// Handle input change
 const onInputChange = () => {
     const searchTerm = document.getElementById('college-search').value.toLowerCase();
-    // Only show suggestions if the input is not empty
+    const suggestionsContainer = document.getElementById('suggestions');
+
     if (searchTerm) {
-        const filteredColleges = collegesData.filter(([college]) => college.toLowerCase().includes(searchTerm));
-        showSuggestions(filteredColleges); // Show matching colleges
+        const filteredColleges = collegesData.filter(college => college.name.toLowerCase().startsWith(searchTerm));
+        showSuggestions(filteredColleges);
     } else {
-        document.getElementById('suggestions').style.display = 'none'; // Hide if input is empty
+        suggestionsContainer.style.display = 'none';
     }
 };
 
-// Use debounce to limit the frequency of input events
-document.getElementById('college-search').addEventListener('input', debounce(onInputChange, 300)); // 300ms delay
+// Show suggestions
+function showSuggestions(colleges) {
+    const suggestionsContainer = document.getElementById('suggestions');
+    suggestionsContainer.innerHTML = '';
 
-// Show suggestions when input is focused
-document.getElementById('college-search').addEventListener('focus', () => {
-    const searchTerm = document.getElementById('college-search').value.toLowerCase();
-    if (searchTerm) {
-        const filteredColleges = collegesData.filter(([college]) => college.toLowerCase().includes(searchTerm));
-        showSuggestions(filteredColleges);
+    if (colleges.length > 0) {
+        suggestionsContainer.style.display = 'block';
+        colleges.forEach(college => {
+            const item = document.createElement('div');
+            item.classList.add('suggestion-item');
+            item.textContent = college.name;
+            item.onclick = () => selectCollege(college);
+            suggestionsContainer.appendChild(item);
+        });
+    } else {
+        suggestionsContainer.style.display = 'none';
+    }
+}
+
+// Function to handle college selection
+function selectCollege(college) {
+    document.getElementById('college-search').value = college.name;
+    const residency = document.getElementById('residency-select').value;
+
+    // Set tuition based on residency selection
+    document.getElementById('tuition-fee').value = residency === 'out-of-state'
+        ? college.tuitionOutOfState || 0
+        : college.tuitionInState || 0;
+
+    document.getElementById('suggestions').style.display = 'none';
+}
+
+// Event listeners
+document.getElementById('college-search').addEventListener('input', debounce(onInputChange, 300));
+document.getElementById('residency-select').addEventListener('change', () => {
+    const selectedCollegeName = document.getElementById('college-search').value;
+    const selectedCollege = collegesData.find(college => college.name === selectedCollegeName);
+    if (selectedCollege) {
+        document.getElementById('tuition-fee').value = document.getElementById('residency-select').value === 'out-of-state'
+            ? selectedCollege.tuitionOutOfState || 0
+            : selectedCollege.tuitionInState || 0;
     }
 });
 
-// Hide suggestions when input is blurred
-document.getElementById('college-search').addEventListener('blur', () => {
-    setTimeout(() => {
-        document.getElementById('suggestions').style.display = 'none';
-    }, 100); // Delay to allow for click on suggestion
-});
+document.getElementById('calculate-btn').addEventListener('click', calculateTotalCost);
+document.getElementById('living-arrangement').addEventListener('change', toggleCommutingFields);
 
-// Fetch and populate colleges
-fetchSheetData().then(data => {
-    if (data && data.length > 0) {
-        const [headers, ...rows] = data; // Skip the first row if it contains headers
-        collegesData = rows; // Store data for lookup
-    }
-});
-
-document.getElementById('living-arrangement').addEventListener('change', function() {
-    const housingCostInput = document.getElementById('housing-cost');
-    const housingCostLabel = document.getElementById('housing-cost-label');
+// Toggle commuting fields visibility
+function toggleCommutingFields() {
+    const livingArrangement = document.getElementById('living-arrangement').value;
     const commutingDetails = document.getElementById('commuting-details');
 
-    if (this.value === 'on-campus') {
-        housingCostInput.style.display = 'block';
-        housingCostLabel.style.display = 'block';
-        commutingDetails.style.display = 'none';
-    } else {
-        housingCostInput.style.display = 'none';
-        housingCostLabel.style.display = 'none';
+    if (livingArrangement === 'commuting') {
         commutingDetails.style.display = 'block';
-        housingCostInput.value = ''; // Clear the input if switching to commuting
+    } else {
+        commutingDetails.style.display = 'none';
     }
-});
+}
 
-document.getElementById('calculate-btn').addEventListener('click', updateCostDisplay);
-
-function updateCostDisplay() {
-    let cost = 0; // Initialize total cost
-
+// Calculate total cost
+function calculateTotalCost() {
     const tuitionFee = parseFloat(document.getElementById('tuition-fee').value) || 0;
-    const collegeCostIncrease = parseFloat(document.getElementById('college-cost-increase').value) || 0;
-    const attendanceYears = parseInt(document.getElementById('attendance-years').value) || 0;
+    const housingCost = parseFloat(document.getElementById('housing-cost').value) || 0;
     const foodCost = parseFloat(document.getElementById('food-cost').value) || 0;
     const miscellaneousCost = parseFloat(document.getElementById('miscellaneous-cost').value) || 0;
+    const collegeCostIncrease = parseFloat(document.getElementById('college-cost-increase').value) || 0;
+    const attendanceYears = parseInt(document.getElementById('attendance-years').value) || 1;
 
-    cost += tuitionFee; // Add tuition fee
+    let totalCost = 0;
+    let breakdownList = [];
 
-    // Calculate the total cost with increase
-    for (let year = 0; year < attendanceYears; year++) {
-        cost += tuitionFee * Math.pow(1 + collegeCostIncrease / 100, year); // Compound increase
+    // Tuition
+    for (let i = 0; i < attendanceYears; i++) {
+        totalCost += tuitionFee * Math.pow(1 + collegeCostIncrease / 100, i);
+        breakdownList.push(`Year ${i + 1} Tuition: $${(tuitionFee * Math.pow(1 + collegeCostIncrease / 100, i)).toFixed(2)}`);
     }
 
-    cost += foodCost; // Add food cost
-    cost += miscellaneousCost; // Add miscellaneous expenses
-
-    const livingArrangement = document.getElementById('living-arrangement').value;
-    if (livingArrangement === 'on-campus') {
-        const userHousingCost = parseFloat(document.getElementById('housing-cost').value) || 0;
-        cost += userHousingCost; // Add user-defined housing cost
-    } else if (livingArrangement === 'commuting') {
-        const miles = parseFloat(document.getElementById('miles').value) || 0;
-        const gasCost = parseFloat(document.getElementById('gas-cost').value) || 0;
-        const averageMPG = 25; // Assume average miles per gallon
-        const totalCommuteCost = (miles / averageMPG) * gasCost;
-        cost += totalCommuteCost; // Add commuting cost
+    // Housing
+    if (document.getElementById('living-arrangement').value === 'on-campus') {
+        for (let i = 0; i < attendanceYears; i++) {
+            totalCost += housingCost * Math.pow(1 + collegeCostIncrease / 100, i);
+            breakdownList.push(`Year ${i + 1} Housing: $${(housingCost * Math.pow(1 + collegeCostIncrease / 100, i)).toFixed(2)}`);
+        }
     }
 
-    document.getElementById('cost-display').textContent = `Total Cost: $${cost.toFixed(2)}`;
+    // Food
+    for (let i = 0; i < attendanceYears; i++) {
+        totalCost += foodCost * Math.pow(1 + collegeCostIncrease / 100, i);
+        breakdownList.push(`Year ${i + 1} Food: $${(foodCost * Math.pow(1 + collegeCostIncrease / 100, i)).toFixed(2)}`);
+    }
+
+    // Miscellaneous
+    for (let i = 0; i < attendanceYears; i++) {
+        totalCost += miscellaneousCost * Math.pow(1 + collegeCostIncrease / 100, i);
+        breakdownList.push(`Year ${i + 1} Miscellaneous: $${(miscellaneousCost * Math.pow(1 + collegeCostIncrease / 100, i)).toFixed(2)}`);
+    }
+
+    // Update display
+    document.getElementById('cost-display').textContent = `Total Cost: $${totalCost.toFixed(2)}`;
+    document.getElementById('breakdown-list').innerHTML = breakdownList.map(item => `<li>${item}</li>`).join('');
+    document.getElementById('cost-breakdown').style.display = 'block';
 }
+
+// Fetch data on page load
+fetchCollegesData();
