@@ -1,10 +1,9 @@
-/* General Styles */
 body {
-    font-family: 'Helvetica Neue', Arial, sans-serif;
+    font-family: 'Roboto', sans-serif;
     margin: 0;
     padding: 0;
-    background-color: #ffffff; /* Clean white background */
-    color: #333; /* Dark text for contrast */
+    background-color: #f7f9fc;
+    color: #333;
 }
 
 .main-container {
@@ -12,108 +11,126 @@ body {
     justify-content: space-between;
     padding: 40px;
     max-width: 1200px;
-    margin: 0 auto; /* Center align main container */
+    margin: 0 auto;
 }
 
-/* Sidebar */
 .sidebar {
     width: 300px;
     padding: 20px;
-    background-color: #f4f4f4; /* Light gray for sidebar */
-    border-radius: 12px; /* Rounded corners */
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1); /* Subtle shadow */
-    margin-right: 30px; /* Space between sidebar and calculator */
+    background-color: #ffffff;
+    border-radius: 15px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    margin-right: 30px;
 }
 
-/* Headings */
-h1, h2 {
-    color: #007BFF; /* Blue for headings */
+.sidebar h2 {
+    color: #ff5733; /* A vibrant coral color */
     margin-bottom: 1rem;
 }
 
-/* Calculator Container */
-.calculator-container {
-    flex-grow: 1; /* Allow calculator to fill remaining space */
-    text-align: center;
-    background-color: #ffffff; /* White background */
-    padding: 40px;
-    border-radius: 12px; /* Rounded corners */
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+.sidebar ul {
+    list-style: none;
+    padding: 0;
 }
 
-/* Form Elements */
+.sidebar ul li {
+    margin-bottom: 10px;
+}
+
+.sidebar ul li a {
+    color: #ff5733;
+    text-decoration: none;
+    transition: color 0.3s;
+}
+
+.sidebar ul li a:hover {
+    color: #c0392b; /* Darker coral */
+    text-decoration: underline;
+}
+
+h1 {
+    color: #2980b9; /* A rich blue */
+    margin-bottom: 1.5rem;
+}
+
+.calculator-container {
+    flex-grow: 1;
+    text-align: center;
+    background-color: #ffffff;
+    padding: 40px;
+    border-radius: 15px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+}
+
 label {
-    font-weight: bold; /* Make labels stand out */
-    margin-bottom: 0.5rem; /* Space between label and input */
-    display: block; /* Ensure labels take full width */
+    font-weight: bold;
+    margin-bottom: 0.5rem;
+    display: block;
+    color: #4a4a4a;
 }
 
 input, select {
-    padding: 16px;
-    margin: 10px 0; /* Margin for inputs */
-    border: 1px solid #007BFF; /* Blue border */
-    border-radius: 8px; /* Rounded corners */
-    background-color: #f0f0f0; /* Light gray background */
-    color: #333; /* Dark text */
+    padding: 15px;
+    margin: 10px 0;
+    border: 1px solid #2980b9; /* Rich blue */
+    border-radius: 10px;
+    background-color: #f9f9f9;
+    color: #333;
     font-size: 1em;
-    width: 100%; /* Full width */
-    transition: border-color 0.3s ease;
+    width: 100%;
+    transition: border-color 0.3s ease, background-color 0.3s ease;
 }
 
 input:focus, select:focus {
-    border-color: #0056b3; /* Darker blue on focus */
-    outline: none; /* Remove outline */
+    border-color: #1f6397; /* Darker blue */
+    background-color: #ffffff;
+    outline: none;
 }
 
-/* Button Styles */
 button {
-    padding: 15px 30px; /* Padding for buttons */
-    background-color: #007BFF; /* Button color */
-    color: #ffffff; /* White text */
+    padding: 15px 30px;
+    background-color: #ff5733; /* Coral */
+    color: #ffffff;
     border: none;
-    border-radius: 8px; /* Rounded corners */
+    border-radius: 10px;
     cursor: pointer;
     transition: background-color 0.3s ease, transform 0.2s ease;
-    margin-top: 20px; /* Space above button */
-    font-size: 1em; /* Consistent font size */
+    margin-top: 20px;
+    font-size: 1em;
 }
 
 button:hover {
-    background-color: #0056b3; /* Darker blue on hover */
-    transform: translateY(-2px); /* Lift effect */
+    background-color: #c0392b; /* Darker coral */
+    transform: translateY(-2px);
 }
 
-/* Cost Display */
 #cost-display-container {
     margin-top: 20px;
-    padding: 15px; /* Padding */
-    border: 1px solid #007BFF; /* Blue border */
-    border-radius: 8px; /* Rounded corners */
-    background-color: #e7f1ff; /* Light blue background */
+    padding: 20px;
+    border: 1px solid #2980b9; /* Rich blue */
+    border-radius: 10px;
+    background-color: #e1f5fe; /* Light blue */
     font-weight: bold;
-    text-align: center; /* Center align text */
+    text-align: center;
 }
 
-/* Suggestions */
 #breakdown-list {
     list-style: none;
     padding: 0;
 }
 
 .suggestion-item {
-    padding: 15px; /* Increased padding */
+    padding: 10px;
     cursor: pointer;
     transition: background-color 0.3s ease;
-    border-bottom: 1px solid #f0f0f0; /* Subtle separator */
+    border-bottom: 1px solid #f0f0f0;
 }
 
 .suggestion-item:hover {
-    background-color: #f0f0f0; /* Highlight on hover */
+    background-color: #e1f5fe; /* Light blue */
 }
 
-/* Spinner */
 #loading-spinner {
     text-align: center;
-    font-size: 1.5em; /* Increase spinner font size */
-    margin-top: 20px; /* Space above spinner */
+    font-size: 1.5em;
 }
