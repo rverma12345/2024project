@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>College Cost Calculator</title>
     <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
 </head>
 <body>
     <div class="main-container">
@@ -42,48 +43,40 @@
                 <option value="in-state">In State</option>
                 <option value="out-of-state">Out of State</option>
             </select>
-            <br>
 
             <label for="living-arrangement">Living Arrangement:</label>
             <select id="living-arrangement">
                 <option value="on-campus">Living on Campus</option>
                 <option value="commuting">Commuting</option>
             </select>
-            <br>
 
             <label for="housing-cost" id="housing-cost-label" style="display: none;">Annual Housing Cost ($):</label>
             <input type="number" id="housing-cost" min="0" placeholder="Enter housing cost" style="display: none;">
-            <br>
 
             <div id="commuting-details" style="display: none;">
                 <label for="miles">Round-trip Commute Distance (miles):</label>
                 <input type="number" id="miles" min="0" step="0.1" placeholder="Enter miles">
-                <br>
                 <label for="gas-cost">Average Gas Cost ($ per gallon):</label>
                 <input type="number" id="gas-cost" min="0" step="0.01" placeholder="Enter gas cost">
             </div>
 
             <label for="tuition-fee">Tuition Fee ($):</label>
             <input type="number" id="tuition-fee" min="0" placeholder="Enter tuition fee" readonly>
-            <br>
 
             <label for="college-cost-increase">College Cost Increase Rate (%):</label>
             <input type="number" id="college-cost-increase" min="0" step="0.01" placeholder="Enter increase rate">
-            <br>
 
             <label for="attendance-years">Expected Attendance (years):</label>
             <input type="number" id="attendance-years" min="1" step="1" placeholder="Enter years">
-            <br>
 
             <label for="food-cost">Annual Food Cost ($):</label>
             <input type="number" id="food-cost" min="0" step="0.01" placeholder="Enter food cost">
-            <br>
 
             <label for="miscellaneous-cost">Miscellaneous Expenses ($):</label>
             <input type="number" id="miscellaneous-cost" min="0" step="0.01" placeholder="Enter misc. expenses">
-            <br>
 
             <button id="calculate-btn">Calculate Cost</button>
+
             <div id="cost-display-container">
                 <p id="cost-display">Total Cost: $0.00</p>
             </div>
