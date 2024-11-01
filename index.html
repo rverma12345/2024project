@@ -6,9 +6,16 @@
     <title>College Cost Calculator</title>
     <link rel="stylesheet" href="style.css">
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
-    <div class="main-container">
+    <div id="intro-page" class="intro-container">
+        <h1>College Cost Calculator</h1>
+        <p>This tool helps you estimate the total costs of attending college, including tuition, housing, food, and more.</p>
+        <button id="continue-btn">Continue</button>
+    </div>
+
+    <div id="main-app" class="main-container" style="display: none;">
         <aside class="sidebar">
             <h2>Tips for College Costs</h2>
             <ul>
@@ -30,6 +37,13 @@
                 <li><a href="https://studentaid.gov/understand-aid/types/loans" target="_blank">Student Loan Information</a></li>
                 <li><a href="#">Career Services at Your College</a></li>
             </ul>
+
+            <div class="search-bubble">
+                <p>Not sure of something? Search it up!</p>
+                <label for="google-search">Google Search:</label>
+                <input type="text" id="google-search" placeholder="Type your search...">
+                <button id="search-btn">Search Google</button>
+            </div>
         </aside>
 
         <div class="calculator-container">
@@ -50,14 +64,20 @@
                 <option value="commuting">Commuting</option>
             </select>
 
-            <label for="housing-cost" id="housing-cost-label" style="display: none;">Annual Housing Cost ($):</label>
-            <input type="number" id="housing-cost" min="0" placeholder="Enter housing cost" style="display: none;">
+            <div id="housing-cost-container" style="display: none;">
+                <label for="housing-cost" id="housing-cost-label">Annual Housing Cost ($):</label>
+                <input type="number" id="housing-cost" min="0" placeholder="Enter housing cost">
+            </div>
 
             <div id="commuting-details" style="display: none;">
                 <label for="miles">Round-trip Commute Distance (miles):</label>
                 <input type="number" id="miles" min="0" step="0.1" placeholder="Enter miles">
+                <label for="mpg">Miles Per Gallon:</label>
+                <input type="number" id="mpg" min="0" step="0.1" placeholder="Enter MPG">
                 <label for="gas-cost">Average Gas Cost ($ per gallon):</label>
                 <input type="number" id="gas-cost" min="0" step="0.01" placeholder="Enter gas cost">
+                <label for="parking-cost">Monthly Parking Cost ($):</label>
+                <input type="number" id="parking-cost" min="0" step="0.01" placeholder="Enter parking cost">
             </div>
 
             <label for="tuition-fee">Tuition Fee ($):</label>
@@ -76,6 +96,8 @@
             <input type="number" id="miscellaneous-cost" min="0" step="0.01" placeholder="Enter misc. expenses">
 
             <button id="calculate-btn">Calculate Cost</button>
+            <button id="graph-btn">Graph Costs</button>
+            <canvas id="costChart" style="display:none; width:100%; max-width:600px;"></canvas>
 
             <div id="cost-display-container">
                 <p id="cost-display">Total Cost: $0.00</p>
