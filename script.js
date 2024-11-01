@@ -1,5 +1,8 @@
-const apiUrl = "https://api.data.gov/ed/collegescorecard/v1/schools.json?api_key=QpcoJvRbjb8tW4mMHeFLs03clHditVf3AeppBdJC&fields=school.name,latest.cost.tuition.out_of_state,latest.cost.tuition.in_state";
+const apiKey = "QpcoJvRbjb8tW4mMHeFLs03clHditVf3AeppBdJC";
+const apiUrl = `https://api.data.gov/ed/collegescorecard/v1/schools.json?api_key=${apiKey}&fields=school.name,latest.cost.tuition.out_of_state,latest.cost.tuition.in_state`;
+
 let collegesData = [];
+let chart;
 
 async function fetchCollegesData() {
     try {
@@ -13,36 +16,13 @@ async function fetchCollegesData() {
                 tuitionInState: college["latest.cost.tuition.in_state"]
             }));
         } else {
-            console.error('No colleges found.');
+            console.error("No results found.");
         }
     } catch (error) {
-        console.error('Error fetching data:', error);
+        console.error("Error fetching data:", error);
     }
 }
 
-// Debounce function
-function debounce(func, delay) {
-    let timeout;
-    return function (...args) {
-        clearTimeout(timeout);
-        timeout = setTimeout(() => func.apply(this, args), delay);
-    };
-}
-
-// Handle input change
-const onInputChange = () => {
-    const searchTerm = document.getElementById('college-search').value.toLowerCase();
-    const suggestionsContainer = document.getElementById('suggestions');
-
-    if (searchTerm) {
-        const filteredColleges = collegesData.filter(college => college.name.toLowerCase().startsWith(searchTerm));
-        showSuggestions(filteredColleges);
-    } else {
-        suggestionsContainer.style.display = 'none';
-    }
-};
-
-// Show suggestions
 function showSuggestions(colleges) {
     const suggestionsContainer = document.getElementById('suggestions');
     suggestionsContainer.innerHTML = '';
@@ -61,89 +41,125 @@ function showSuggestions(colleges) {
     }
 }
 
-// Function to handle college selection
-function selectCollege(college) {
-    document.getElementById('college-search').value = college.name;
-    const residency = document.getElementById('residency-select').value;
-
-    // Set tuition based on residency selection
-    document.getElementById('tuition-fee').value = residency === 'out-of-state'
-        ? college.tuitionOutOfState || 0
-        : college.tuitionInState || 0;
-
-    document.getElementById('suggestions').style.display = 'none';
+function onInputChange() {
+    const searchTerm = document.getElementById('college-search').value.toLowerCase();
+    if (searchTerm) {
+        const filteredColleges = collegesData.filter(college => college.name.toLowerCase().includes(searchTerm));
+        showSuggestions(filteredColleges);
+    } else {
+        document.getElementById('suggestions').style.display = 'none';
+    }
 }
 
-// Event listeners
-document.getElementById('college-search').addEventListener('input', debounce(onInputChange, 300));
+function selectCollege(college) {
+    document.getElementById('college-search').value = college.name;
+    document.getElementById('suggestions').style.display = 'none';
+    updateTuition(college);
+}
+
+function updateTuition(college) {
+    const residency = document.getElementById('residency-select').value;
+    document.getElementById('tuition-fee').value = residency === 'in-state' ? college.tuitionInState : college.tuitionOutOfState;
+}
+
 document.getElementById('residency-select').addEventListener('change', () => {
-    const selectedCollegeName = document.getElementById('college-search').value;
-    const selectedCollege = collegesData.find(college => college.name === selectedCollegeName);
-    if (selectedCollege) {
-        document.getElementById('tuition-fee').value = document.getElementById('residency-select').value === 'out-of-state'
-            ? selectedCollege.tuitionOutOfState || 0
-            : selectedCollege.tuitionInState || 0;
+    const collegeName = document.getElementById('college-search').value;
+    const college = collegesData.find(c => c.name === collegeName);
+    if (college) {
+        updateTuition(college);
     }
 });
 
-document.getElementById('calculate-btn').addEventListener('click', calculateTotalCost);
-document.getElementById('living-arrangement').addEventListener('change', toggleCommutingFields);
+document.getElementById('living-arrangement').addEventListener('change', function() {
+    const livingArrangement = this.value;
+    document.getElementById('housing-cost-container').style.display = livingArrangement === 'on-campus' ? 'block' : 'none';
+    document.getElementById('commuting-details').style.display = livingArrangement === 'commuting' ? 'block' : 'none';
+});
 
-// Toggle commuting fields visibility
-function toggleCommutingFields() {
-    const livingArrangement = document.getElementById('living-arrangement').value;
-    const commutingDetails = document.getElementById('commuting-details');
-
-    if (livingArrangement === 'commuting') {
-        commutingDetails.style.display = 'block';
-    } else {
-        commutingDetails.style.display = 'none';
-    }
-}
-
-// Calculate total cost
 function calculateTotalCost() {
-    const tuitionFee = parseFloat(document.getElementById('tuition-fee').value) || 0;
-    const housingCost = parseFloat(document.getElementById('housing-cost').value) || 0;
+    const tuition = parseFloat(document.getElementById('tuition-fee').value) || 0;
+    const years = parseInt(document.getElementById('attendance-years').value) || 1;
+    const increaseRate = parseFloat(document.getElementById('college-cost-increase').value) || 0;
     const foodCost = parseFloat(document.getElementById('food-cost').value) || 0;
-    const miscellaneousCost = parseFloat(document.getElementById('miscellaneous-cost').value) || 0;
-    const collegeCostIncrease = parseFloat(document.getElementById('college-cost-increase').value) || 0;
-    const attendanceYears = parseInt(document.getElementById('attendance-years').value) || 1;
+    const miscCost = parseFloat(document.getElementById('miscellaneous-cost').value) || 0;
 
     let totalCost = 0;
-    let breakdownList = [];
 
-    // Tuition
-    for (let i = 0; i < attendanceYears; i++) {
-        totalCost += tuitionFee * Math.pow(1 + collegeCostIncrease / 100, i);
-        breakdownList.push(`Year ${i + 1} Tuition: $${(tuitionFee * Math.pow(1 + collegeCostIncrease / 100, i)).toFixed(2)}`);
-    }
+    for (let year = 0; year < years; year++) {
+        const adjustedTuition = tuition * Math.pow(1 + increaseRate / 100, year);
+        totalCost += adjustedTuition + foodCost + miscCost;
 
-    // Housing
-    if (document.getElementById('living-arrangement').value === 'on-campus') {
-        for (let i = 0; i < attendanceYears; i++) {
-            totalCost += housingCost * Math.pow(1 + collegeCostIncrease / 100, i);
-            breakdownList.push(`Year ${i + 1} Housing: $${(housingCost * Math.pow(1 + collegeCostIncrease / 100, i)).toFixed(2)}`);
+        const livingArrangement = document.getElementById('living-arrangement').value;
+        if (livingArrangement === 'on-campus') {
+            const housingCost = parseFloat(document.getElementById('housing-cost').value) || 0;
+            totalCost += housingCost;
+        } else if (livingArrangement === 'commuting') {
+            const miles = parseFloat(document.getElementById('miles').value) || 0;
+            const mpg = parseFloat(document.getElementById('mpg').value) || 0;
+            const gasCost = parseFloat(document.getElementById('gas-cost').value) || 0;
+            const parkingCost = parseFloat(document.getElementById('parking-cost').value) || 0;
+
+            const commuteCost = (miles / mpg) * gasCost * 365; // Daily commute cost annually
+            totalCost += commuteCost + (parkingCost * 12); // Annual parking cost
         }
     }
 
-    // Food
-    for (let i = 0; i < attendanceYears; i++) {
-        totalCost += foodCost * Math.pow(1 + collegeCostIncrease / 100, i);
-        breakdownList.push(`Year ${i + 1} Food: $${(foodCost * Math.pow(1 + collegeCostIncrease / 100, i)).toFixed(2)}`);
-    }
-
-    // Miscellaneous
-    for (let i = 0; i < attendanceYears; i++) {
-        totalCost += miscellaneousCost * Math.pow(1 + collegeCostIncrease / 100, i);
-        breakdownList.push(`Year ${i + 1} Miscellaneous: $${(miscellaneousCost * Math.pow(1 + collegeCostIncrease / 100, i)).toFixed(2)}`);
-    }
-
-    // Update display
     document.getElementById('cost-display').textContent = `Total Cost: $${totalCost.toFixed(2)}`;
-    document.getElementById('breakdown-list').innerHTML = breakdownList.map(item => `<li>${item}</li>`).join('');
-    document.getElementById('cost-breakdown').style.display = 'block';
+    return totalCost;
 }
 
-// Fetch data on page load
+document.getElementById('calculate-btn').addEventListener('click', function() {
+    const totalCost = calculateTotalCost();
+    return totalCost;
+});
+
+document.getElementById('graph-btn').addEventListener('click', function() {
+    const collegeName = document.getElementById('college-search').value;
+    const totalCost = calculateTotalCost();
+
+    if (chart) {
+        chart.data.labels.push(collegeName);
+        chart.data.datasets[0].data.push(totalCost);
+        chart.update();
+    } else {
+        const ctx = document.getElementById('costChart').getContext('2d');
+        chart = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: [collegeName],
+                datasets: [{
+                    label: 'Total Cost ($)',
+                    data: [totalCost],
+                    backgroundColor: 'rgba(41, 128, 185, 0.5)',
+                    borderColor: 'rgba(41, 128, 185, 1)',
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+        document.getElementById('costChart').style.display = 'block'; // Show the chart
+    }
+});
+
+document.getElementById('college-search').addEventListener('input', onInputChange);
+document.getElementById('search-btn').addEventListener('click', function() {
+    const query = document.getElementById('google-search').value;
+    if (query) {
+        window.open(`https://www.google.com/search?q=${encodeURIComponent(query)}`, '_blank');
+    }
+});
+
+document.getElementById('continue-btn').addEventListener('click', function() {
+    document.getElementById('intro-page').style.display = 'none';
+    document.getElementById('main-app').style.display = 'flex';
+});
+
+
+
 fetchCollegesData();
