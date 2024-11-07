@@ -105,10 +105,25 @@ label {
 
 input, select {
     width: 100%;
-    padding: 10px;
+    padding: 12px;
     margin-bottom: 15px;
     border: 1px solid #ccc;
-    border-radius: 5px;
+    border-radius: 10px; /* Slightly more rounded corners */
+    transition: all 0.3s ease;
+}
+
+input:focus, select:focus {
+    border-color: #2980b9; /* Blue border on focus */
+    box-shadow: 0 0 5px rgba(41, 128, 185, 0.5);
+}
+
+select {
+    background-color: #f4f4f9;
+    cursor: pointer;
+}
+
+select:hover {
+    background-color: #eef2f6; /* Slightly lighter background on hover */
 }
 
 button {
@@ -148,3 +163,15 @@ button:hover {
     border-radius: 5px;
 }
 
+#suggestions .suggestion-item {
+    padding: 10px;
+    background-color: #ffffff;
+    border: 1px solid #ddd;
+    margin: 5px 0;
+    cursor: pointer;
+    border-radius: 5px;
+}
+
+#suggestions .suggestion-item:hover {
+    background-color: #f2f2f2;
+}
