@@ -1,177 +1,140 @@
-body {
-    font-family: 'Roboto', sans-serif;
+/* Global Reset and Body Styles */
+* {
     margin: 0;
     padding: 0;
-    background-color: #f7f9fc;
-    color: #333;
+    box-sizing: border-box;
 }
 
+body {
+    font-family: 'Arial', sans-serif;
+    background-color: #000000;  /* Set the background color to black */
+    color: #ffffff;  /* Set text color to white */
+    line-height: 1.6;
+    overflow-x: hidden; /* Prevent horizontal scrolling */
+    transition: background-color 0.3s ease;
+}
+
+/* Prevent scrolling on the intro page */
+body.no-scroll {
+    overflow: hidden; /* Disable scrolling */
+}
+
+/* Intro Page */
 .intro-container {
     text-align: center;
-    padding: 50px;
+    padding: 100px 20px;
     display: flex;
     flex-direction: column;
     justify-content: center;
-    align-items: center; /* Center align items vertically */
-    height: 100vh; /* Full viewport height */
+    align-items: center;
+    height: 100vh;
+    background-color: #000000;  /* Set background color to black */
+    color: #ffffff;  /* Set text color to white */
+    border-radius: 8px;
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+    opacity: 0;
+    animation: fadeIn 1s forwards;
 }
 
 .intro-container h1 {
-    color: #2980b9;
-}
-
-.intro-container p {
+    font-size: 3rem;
+    font-weight: 700;
+    color: #007bff;
     margin-bottom: 20px;
 }
 
-.intro-container button {
-    padding: 15px 30px;
-    background-color: #ff5733; /* Coral */
-    color: #ffffff;
-    border: none;
-    border-radius: 10px;
-    cursor: pointer;
-    transition: background-color 0.3s ease, transform 0.2s ease;
+.intro-container p {
+    font-size: 1.5rem;
+    color: #ffffff;  /* White text */
+    margin-bottom: 30px;
 }
 
-.intro-container button:hover {
-    background-color: #c0392b; /* Darker coral */
-    transform: translateY(-2px);
-}
-
+/* Main App */
 .main-container {
     display: flex;
-    justify-content: space-between;
-    align-items: flex-start;
-    padding: 40px;
-    max-width: 1200px;
-    margin: 0 auto;
-}
-
-.sidebar {
-    width: 300px;
-    padding: 20px;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
     background-color: #ffffff;
-    border-radius: 15px;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
-    margin-right: 30px;
+    padding: 40px;
+    border-radius: 8px;
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+    opacity: 0;
+    animation: fadeIn 1s forwards 0.5s;
+    width: 100%;
+    max-width: 800px;
 }
 
-.sidebar h2 {
-    color: #ff5733; /* A vibrant coral color */
-    margin-bottom: 1rem;
-}
-
-.sidebar ul {
-    list-style: none;
-    padding: 0;
-}
-
-.sidebar ul li {
-    margin-bottom: 10px;
-}
-
-.sidebar ul li a {
-    color: #ff5733;
-    text-decoration: none;
-    transition: color 0.3s;
-}
-
-.sidebar ul li a:hover {
-    color: #c0392b; /* Darker coral */
-    text-decoration: underline;
-}
-
-h1 {
-    color: #2980b9; /* A rich blue */
+h2 {
+    font-size: 2rem;
+    color: #007bff;
+    font-weight: 600;
     margin-bottom: 1.5rem;
 }
 
-.calculator-container {
-    flex-grow: 1;
-    max-width: 700px; /* Adjust the width as needed */
-    text-align: center;
-    background-color: #ffffff;
-    padding: 40px;
-    border-radius: 15px;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
-}
-
-label {
-    font-weight: bold;
-    margin-bottom: 0.5rem;
-    display: block;
-}
-
-input, select {
-    width: 100%;
-    padding: 12px;
-    margin-bottom: 15px;
+/* Form Inputs */
+input, select, button {
+    width: 80%;
+    max-width: 400px;
+    padding: 14px;
+    margin-bottom: 20px;
     border: 1px solid #ccc;
-    border-radius: 10px; /* Slightly more rounded corners */
+    border-radius: 4px;
+    font-size: 1rem;
+    color: #2d3e50;
     transition: all 0.3s ease;
+    text-align: center;
 }
 
-input:focus, select:focus {
-    border-color: #2980b9; /* Blue border on focus */
-    box-shadow: 0 0 5px rgba(41, 128, 185, 0.5);
-}
-
-select {
-    background-color: #f4f4f9;
-    cursor: pointer;
-}
-
-select:hover {
-    background-color: #eef2f6; /* Slightly lighter background on hover */
+input:focus, select:focus, button:focus {
+    outline: none;
+    border-color: #007bff;
+    box-shadow: 0 0 4px rgba(0, 123, 255, 0.5);
 }
 
 button {
-    padding: 10px 20px;
-    background-color: #2980b9; /* Rich blue */
-    color: #ffffff;
-    border: none;
-    border-radius: 5px;
+    background-color: #28a745;
+    color: #fff;
+    font-weight: 600;
     cursor: pointer;
-    transition: background-color 0.3s ease, transform 0.2s ease;
+    transition: background-color 0.3s ease;
 }
 
 button:hover {
-    background-color: #1a5276; /* Darker blue */
+    background-color: #218838;
     transform: translateY(-2px);
 }
 
-#costChart {
-    margin-top: 20px;
-    border: 1px solid #2980b9; /* Rich blue */
-    border-radius: 10px;
+/* Cost Display */
+#cost-display {
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: #28a745;
+    opacity: 0;
+    animation: fadeIn 1s forwards 1s;
 }
 
-.search-bubble {
-    margin-top: 20px;
-    padding: 15px;
-    background-color: #e7f3fe; /* Light blue */
-    border: 1px solid #2980b9;
-    border-radius: 10px;
+/* Keyframes for Animations */
+@keyframes fadeIn {
+    0% {
+        opacity: 0;
+    }
+    100% {
+        opacity: 1;
+    }
 }
 
-#google-search {
-    width: 245px; /* Change this value to adjust the width */
-    padding: 10px;
-    margin-bottom: 15px;
-    border: 1px solid #ddd;
-    border-radius: 5px;
-}
+@media (max-width: 768px) {
+    .intro-container h1 {
+        font-size: 2.5rem;
+    
+    }
 
-#suggestions .suggestion-item {
-    padding: 10px;
-    background-color: #ffffff;
-    border: 1px solid #ddd;
-    margin: 5px 0;
-    cursor: pointer;
-    border-radius: 5px;
-}
+    .main-container {
+        padding: 30px;
+    }
 
-#suggestions .suggestion-item:hover {
-    background-color: #f2f2f2;
+    input, select, button {
+        font-size: 1rem;
+    }
 }
