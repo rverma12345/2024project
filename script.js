@@ -15,6 +15,7 @@ document.addEventListener("DOMContentLoaded", function () {
     let collegeLinks = [];
     let collegeCities = [];
     let collegeStates = [];
+    let collegePublicPrivate = [];
     let selectedCollegeIndex = -1;
 
     // Google API credentials
@@ -25,7 +26,7 @@ document.addEventListener("DOMContentLoaded", function () {
     const fetchColleges = async () => {
         const apiKey = "AIzaSyCfrP-vedjtT-jxoXR9Adco8YUV2cRyUaY"; // Replace with your actual API Key
         const spreadsheetId = "1SCwi8zWoxq9pa2LSmu0dfcakdju8RCYZ7n51_Fgprfc"; // Replace with your spreadsheet ID
-        const range = "Sheet1!A:D"; // Fetch both columns A (college names), B (URLs), C (Cities), D (States)
+        const range = "Sheet1!A:H"; // Fetch columns A (college names), B (URLs), C (Cities), D (States), H (Public/Private)
         const url = `https://sheets.googleapis.com/v4/spreadsheets/${spreadsheetId}/values/${range}?key=${apiKey}`;
 
         try {
@@ -36,6 +37,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 collegeLinks = data.values.map(row => row[1]); // Column B: college links
                 collegeCities = data.values.map(row => row[2]); // Column C: city
                 collegeStates = data.values.map(row => row[3]); // Column D: state
+                collegePublicPrivate = data.values.map(row => row[7]); // Column H: public/private status
             }
         } catch (error) {
             console.error("Error fetching college names and links from Google Sheets:", error);
@@ -88,8 +90,10 @@ document.addEventListener("DOMContentLoaded", function () {
                     const collegeName = colleges[selectedCollegeIndex];
                     const city = collegeCities[selectedCollegeIndex];
                     const state = collegeStates[selectedCollegeIndex];
+                    const publicPrivate = collegePublicPrivate[selectedCollegeIndex];
                     document.getElementById('college-name').textContent = collegeName;
                     document.getElementById('college-location').textContent = `${city}, ${state}`;
+                    document.getElementById('public-private-status').textContent = publicPrivate;
 
                     // Fetch image from Google API
                     fetchCollegeImage(collegeName);
@@ -145,18 +149,18 @@ document.addEventListener("DOMContentLoaded", function () {
         const residency = residencySelect.value;
 
         if (collegeName === "") {
-            alert("Please select a college!");
+            alert("Please enter a college name.");
             return;
         }
 
-        // For simplicity, we'll use a static cost for each college
-        const tuitionCost = residency === "in-state" ? 10000 : 20000;
-        const totalCost = tuitionCost + 5000; // Add some additional costs (e.g., housing, food)
-
-        // Display total cost
-        costDisplay.textContent = `Total Cost for ${collegeName}: $${totalCost.toFixed(2)}`;
+        // Placeholder calculation (you can modify it based on real data or cost estimation logic)
+        let baseCost = 30000; // Placeholder base tuition cost
+        if (residency === "out-of-state") {
+            baseCost += 5000; // Additional cost for out-of-state students
+        }
+        costDisplay.textContent = `Total Cost: $${baseCost.toFixed(2)}`;
     });
 
-    // Call the function to fetch colleges data on page load
+    // Initialize the app
     fetchColleges();
 });
