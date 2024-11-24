@@ -5,112 +5,42 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>College Cost Calculator</title>
     <link rel="stylesheet" href="style.css">
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
+
+    <!-- Intro Page -->
     <div id="intro-page" class="intro-container">
         <h1>College Cost Calculator</h1>
         <p>This tool helps you estimate the total costs of attending college, including tuition, housing, food, and more.</p>
         <button id="continue-btn">Continue</button>
     </div>
 
+    <!-- Main App Page -->
     <div id="main-app" class="main-container" style="display: none;">
-        <aside class="sidebar">
-            <h2>Tips for College Costs</h2>
-            <ul>
-                <li>Consider living off-campus to save on housing costs.</li>
-                <li>Look for scholarships and grants to reduce tuition fees.</li>
-                <li>Calculate the total cost of commuting versus living on campus.</li>
-                <li>Factor in hidden costs like books and supplies.</li>
-                <li>Utilize student discounts on transportation and groceries.</li>
-                <li>Create a budget to track expenses and stick to it.</li>
-                <li>Consider community college for general education courses before transferring.</li>
-            </ul>
-
-            <h2>Quick Links</h2>
-            <ul>
-                <li><a href="https://studentaid.gov/resources" target="_blank">Financial Aid Resources</a></li>
-                <li><a href="https://www.usnews.com/best-colleges/rankings/national-universities" target="_blank">College Rankings</a></li>
-                <li><a href="https://studentaid.gov/resources/prepare-for-college/students/budgeting/budgeting-tips" target="_blank">Budgeting Tips</a></li>
-                <li><a href="https://bigfuture.collegeboard.org/scholarship-search" target="_blank">Scholarship Search Engines</a></li>
-                <li><a href="https://studentaid.gov/understand-aid/types/loans" target="_blank">Student Loan Information</a></li>
-                <li><a href="#">Career Services at Your College</a></li>
-            </ul>
-
-            <div class="search-bubble">
-                <p>Not sure of something? Search it up!</p>
-                <label for="google-search">Google Search:</label>
-                <input type="text" id="google-search" placeholder="Type your search...">
-                <button id="search-btn">Search Google</button>
-            </div>
-        </aside>
-
-        <div class="calculator-container">
-            <h1>College Cost Calculator</h1>
-            <label for="college-search">Search for a College:</label>
-            <input type="text" id="college-search" placeholder="Type to search...">
-            <div id="suggestions"></div>
-
-            <label for="residency-select">Select Residency Status:</label>
-            <select id="residency-select">
-                <option value="in-state">In State</option>
-                <option value="out-of-state">Out of State</option>
-            </select>
-
-            <label for="living-arrangement">Living Arrangement:</label>
-            <select id="living-arrangement">
-                <option value="on-campus">Living on Campus</option>
-                <option value="commuting">Commuting</option>
-            </select>
-
-            <div id="housing-cost-container" style="display: none;">
-                <label for="housing-cost" id="housing-cost-label">Annual Housing Cost ($):</label>
-                <input type="number" id="housing-cost" min="0" placeholder="Enter housing cost">
-            </div>
-
-            <div id="commuting-details" style="display: none;">
-                <label for="miles">Round-trip Commute Distance (miles):</label>
-                <input type="number" id="miles" min="0" step="0.1" placeholder="Enter miles">
-                <label for="mpg">Miles Per Gallon:</label>
-                <input type="number" id="mpg" min="0" step="0.1" placeholder="Enter MPG">
-                <label for="gas-cost">Average Gas Cost ($ per gallon):</label>
-                <input type="number" id="gas-cost" min="0" step="0.01" placeholder="Enter gas cost">
-                <label for="parking-cost">Monthly Parking Cost ($):</label>
-                <input type="number" id="parking-cost" min="0" step="0.01" placeholder="Enter parking cost">
-            </div>
-
-            <label for="tuition-fee">Tuition Fee ($):</label>
-            <input type="number" id="tuition-fee" min="0" placeholder="Enter tuition fee" readonly>
-
-            <label for="college-cost-increase">College Cost Increase Rate (%):</label>
-            <input type="number" id="college-cost-increase" min="0" step="0.01" placeholder="Enter increase rate">
-
-            <label for="attendance-years">Expected Attendance (years):</label>
-            <input type="number" id="attendance-years" min="1" step="1" placeholder="Enter years">
-
-            <label for="food-cost">Annual Food Cost ($):</label>
-            <input type="number" id="food-cost" min="0" step="0.01" placeholder="Enter food cost">
-
-            <label for="miscellaneous-cost">Miscellaneous Expenses ($):</label>
-            <input type="number" id="miscellaneous-cost" min="0" step="0.01" placeholder="Enter misc. expenses">
-
-            <button id="calculate-btn">Calculate Cost</button>
-            <button id="graph-btn">Graph Costs</button>
-            <canvas id="costChart" style="display:none; width:100%; max-width:600px;"></canvas>
-
-            <div id="cost-display-container">
-                <p id="cost-display">Total Cost: $0.00</p>
-            </div>
-            <div id="cost-breakdown" style="display:none;">
-                <h2>Cost Breakdown</h2>
-                <ul id="breakdown-list"></ul>
-            </div>
+        <h2>College Cost Calculator</h2>
+        <label for="college-search">Search for a College:</label>
+        <input type="text" id="college-search" placeholder="Start typing to search...">
+        <div id="suggestions"></div>
+        <label for="residency-select">Select Residency Status:</label>
+        <select id="residency-select">
+            <option value="in-state">In State</option>
+            <option value="out-of-state">Out of State</option>
+        </select>
+        <button id="calculate-btn">Calculate Cost</button>
+        <p id="cost-display">Total Cost: $0.00</p>
+        <div id="college-buttons-container">
+            <button id="go-button" style="display: none;">Go</button>
+            <button id="college-website-button" class="view-college-button" style="display: none;" target="_blank">View College Website</button>
+        </div>
+        <div id="college-info" class="college-info">
+            <p id="college-name" class="college-name"></p>
+            <p id="college-location" class="college-location"></p>
         </div>
     </div>
 
-    <div id="loading-spinner" style="display:none;">Loading...</div>
-    
+    <!-- Loading Spinner -->
+    <div id="loading-spinner" style="display: none;">Loading...</div>
+
     <script src="script.js"></script>
 </body>
 </html>
