@@ -138,3 +138,24 @@ button:hover {
         font-size: 1rem;
     }
 }
+
+/* Change the color of the college name to black */
+.college-name {
+    color: black;
+    font-size: 24px;
+    font-weight: bold;
+}
+
+/* Change the color of the city and state to black */
+.college-location {
+    color: black;
+    font-size: 18px;
+    font-style: italic;
+}
+
+/* Change the color of the public/private status to black */
+.college-public-status {
+    color: black;
+    font-size: 16px;
+    font-weight: bold;
+}
