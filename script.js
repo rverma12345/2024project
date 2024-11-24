@@ -1,165 +1,162 @@
-const apiKey = "QpcoJvRbjb8tW4mMHeFLs03clHditVf3AeppBdJC";
-const apiUrl = `https://api.data.gov/ed/collegescorecard/v1/schools.json?api_key=${apiKey}&fields=school.name,latest.cost.tuition.out_of_state,latest.cost.tuition.in_state`;
+document.addEventListener("DOMContentLoaded", function () {
+    const continueBtn = document.getElementById("continue-btn");
+    const introPage = document.getElementById("intro-page");
+    const mainApp = document.getElementById("main-app");
+    const collegeSearchInput = document.getElementById("college-search");
+    const suggestionsContainer = document.getElementById("suggestions");
+    const calculateBtn = document.getElementById("calculate-btn");
+    const costDisplay = document.getElementById("cost-display");
+    const residencySelect = document.getElementById("residency-select");
+    const collegeButtonsContainer = document.getElementById("college-buttons-container");
+    const goButton = document.getElementById("go-button");
+    const collegeWebsiteButton = document.getElementById("college-website-button");
 
-let collegesData = [];
-let chart;
+    let colleges = [];
+    let collegeLinks = [];
+    let collegeCities = [];
+    let collegeStates = [];
+    let selectedCollegeIndex = -1;
 
-async function fetchCollegesData() {
-    try {
-        const response = await fetch(apiUrl);
-        const data = await response.json();
+    // Google API credentials
+    const googleApiKey = "AIzaSyByIj5HheJZEZh-yl0Htqb8tjLNQvRG0gg"; // Replace with your Google API Key
+    const googleCx = "057634c68697e4dfc"; // Replace with your Custom Search Engine ID
 
-        if (data.results && data.results.length > 0) {
-            collegesData = data.results.map(college => ({
-                name: college["school.name"],
-                tuitionOutOfState: college["latest.cost.tuition.out_of_state"],
-                tuitionInState: college["latest.cost.tuition.in_state"]
-            }));
-        } else {
-            console.error("No results found.");
-        }
-    } catch (error) {
-        console.error("Error fetching data:", error);
-    }
-}
+    // Fetch college names and links from Google Sheets
+    const fetchColleges = async () => {
+        const apiKey = "AIzaSyCfrP-vedjtT-jxoXR9Adco8YUV2cRyUaY"; // Replace with your actual API Key
+        const spreadsheetId = "1SCwi8zWoxq9pa2LSmu0dfcakdju8RCYZ7n51_Fgprfc"; // Replace with your spreadsheet ID
+        const range = "Sheet1!A:D"; // Fetch both columns A (college names), B (URLs), C (Cities), D (States)
+        const url = `https://sheets.googleapis.com/v4/spreadsheets/${spreadsheetId}/values/${range}?key=${apiKey}`;
 
-function showSuggestions(colleges) {
-    const suggestionsContainer = document.getElementById('suggestions');
-    suggestionsContainer.innerHTML = '';
-
-    if (colleges.length > 0) {
-        suggestionsContainer.style.display = 'block';
-        colleges.forEach(college => {
-            const item = document.createElement('div');
-            item.classList.add('suggestion-item');
-            item.textContent = college.name;
-            item.onclick = () => selectCollege(college);
-            suggestionsContainer.appendChild(item);
-        });
-    } else {
-        suggestionsContainer.style.display = 'none';
-    }
-}
-
-function onInputChange() {
-    const searchTerm = document.getElementById('college-search').value.toLowerCase();
-    if (searchTerm) {
-        const filteredColleges = collegesData.filter(college => college.name.toLowerCase().includes(searchTerm));
-        showSuggestions(filteredColleges);
-    } else {
-        document.getElementById('suggestions').style.display = 'none';
-    }
-}
-
-function selectCollege(college) {
-    document.getElementById('college-search').value = college.name;
-    document.getElementById('suggestions').style.display = 'none';
-    updateTuition(college);
-}
-
-function updateTuition(college) {
-    const residency = document.getElementById('residency-select').value;
-    document.getElementById('tuition-fee').value = residency === 'in-state' ? college.tuitionInState : college.tuitionOutOfState;
-}
-
-document.getElementById('residency-select').addEventListener('change', () => {
-    const collegeName = document.getElementById('college-search').value;
-    const college = collegesData.find(c => c.name === collegeName);
-    if (college) {
-        updateTuition(college);
-    }
-});
-
-document.getElementById('living-arrangement').addEventListener('change', function() {
-    const livingArrangement = this.value;
-    document.getElementById('housing-cost-container').style.display = livingArrangement === 'on-campus' ? 'block' : 'none';
-    document.getElementById('commuting-details').style.display = livingArrangement === 'commuting' ? 'block' : 'none';
-});
-
-function calculateTotalCost() {
-    const tuition = parseFloat(document.getElementById('tuition-fee').value) || 0;
-    const years = parseInt(document.getElementById('attendance-years').value) || 1;
-    const increaseRate = parseFloat(document.getElementById('college-cost-increase').value) || 0;
-    const foodCost = parseFloat(document.getElementById('food-cost').value) || 0;
-    const miscCost = parseFloat(document.getElementById('miscellaneous-cost').value) || 0;
-
-    let totalCost = 0;
-
-    for (let year = 0; year < years; year++) {
-        const adjustedTuition = tuition * Math.pow(1 + increaseRate / 100, year);
-        totalCost += adjustedTuition + foodCost + miscCost;
-
-        const livingArrangement = document.getElementById('living-arrangement').value;
-        if (livingArrangement === 'on-campus') {
-            const housingCost = parseFloat(document.getElementById('housing-cost').value) || 0;
-            totalCost += housingCost;
-        } else if (livingArrangement === 'commuting') {
-            const miles = parseFloat(document.getElementById('miles').value) || 0;
-            const mpg = parseFloat(document.getElementById('mpg').value) || 0;
-            const gasCost = parseFloat(document.getElementById('gas-cost').value) || 0;
-            const parkingCost = parseFloat(document.getElementById('parking-cost').value) || 0;
-
-            const commuteCost = (miles / mpg) * gasCost * 365; // Daily commute cost annually
-            totalCost += commuteCost + (parkingCost * 12); // Annual parking cost
-        }
-    }
-
-    document.getElementById('cost-display').textContent = `Total Cost: $${totalCost.toFixed(2)}`;
-    return totalCost;
-}
-
-document.getElementById('calculate-btn').addEventListener('click', function() {
-    const totalCost = calculateTotalCost();
-    return totalCost;
-});
-
-document.getElementById('graph-btn').addEventListener('click', function() {
-    const collegeName = document.getElementById('college-search').value;
-    const totalCost = calculateTotalCost();
-
-    if (chart) {
-        chart.data.labels.push(collegeName);
-        chart.data.datasets[0].data.push(totalCost);
-        chart.update();
-    } else {
-        const ctx = document.getElementById('costChart').getContext('2d');
-        chart = new Chart(ctx, {
-            type: 'bar',
-            data: {
-                labels: [collegeName],
-                datasets: [{
-                    label: 'Total Cost ($)',
-                    data: [totalCost],
-                    backgroundColor: 'rgba(41, 128, 185, 0.5)',
-                    borderColor: 'rgba(41, 128, 185, 1)',
-                    borderWidth: 1
-                }]
-            },
-            options: {
-                scales: {
-                    y: {
-                        beginAtZero: true
-                    }
-                }
+        try {
+            const response = await fetch(url);
+            const data = await response.json();
+            if (data.values) {
+                colleges = data.values.map(row => row[0]); // Column A: college names
+                collegeLinks = data.values.map(row => row[1]); // Column B: college links
+                collegeCities = data.values.map(row => row[2]); // Column C: city
+                collegeStates = data.values.map(row => row[3]); // Column D: state
             }
-        });
-        document.getElementById('costChart').style.display = 'block'; // Show the chart
+        } catch (error) {
+            console.error("Error fetching college names and links from Google Sheets:", error);
+        }
+    };
+
+    // Handle the "Continue" button click
+    continueBtn.addEventListener("click", function () {
+        introPage.style.display = "none";
+        mainApp.style.display = "flex";
+    });
+
+    // Handle college search input
+    collegeSearchInput.addEventListener("input", function () {
+        const query = collegeSearchInput.value.toLowerCase();
+        if (query.length > 0) {
+            showSuggestions(query);
+        } else {
+            suggestionsContainer.innerHTML = ''; // Clear suggestions when input is empty
+        }
+    });
+
+    // Show college suggestions based on the query
+    function showSuggestions(query) {
+        const filteredColleges = colleges.filter((college) =>
+            college.toLowerCase().includes(query)
+        );
+
+        suggestionsContainer.innerHTML = ''; // Clear previous suggestions
+        if (filteredColleges.length === 0) {
+            suggestionsContainer.innerHTML = '<div>No results found</div>';
+        } else {
+            filteredColleges.forEach((college) => {
+                const suggestionItem = document.createElement('div');
+                suggestionItem.classList.add('suggestion-item');
+                suggestionItem.textContent = college;
+
+                // Add event listener to handle college selection
+                suggestionItem.addEventListener('click', function () {
+                    collegeSearchInput.value = college;
+                    suggestionsContainer.innerHTML = ''; // Clear suggestions after selection
+
+                    // Set the selected college index
+                    selectedCollegeIndex = colleges.indexOf(college);
+
+                    // Make the "Go" button visible
+                    goButton.style.display = 'inline-block';
+
+                    // Display the college name and city/state
+                    const collegeName = colleges[selectedCollegeIndex];
+                    const city = collegeCities[selectedCollegeIndex];
+                    const state = collegeStates[selectedCollegeIndex];
+                    document.getElementById('college-name').textContent = collegeName;
+                    document.getElementById('college-location').textContent = `${city}, ${state}`;
+
+                    // Fetch image from Google API
+                    fetchCollegeImage(collegeName);
+                });
+
+                suggestionsContainer.appendChild(suggestionItem);
+            });
+        }
     }
-});
 
-document.getElementById('college-search').addEventListener('input', onInputChange);
-document.getElementById('search-btn').addEventListener('click', function() {
-    const query = document.getElementById('google-search').value;
-    if (query) {
-        window.open(`https://www.google.com/search?q=${encodeURIComponent(query)}`, '_blank');
+    // Fetch college image using Google Custom Search API
+    async function fetchCollegeImage(collegeName) {
+        const searchQuery = `${collegeName} logo`;
+        const url = `https://www.googleapis.com/customsearch/v1?q=${encodeURIComponent(searchQuery)}&cx=${googleCx}&key=${googleApiKey}&searchType=image`;
+
+        try {
+            const response = await fetch(url);
+            const data = await response.json();
+
+            // Check if there's at least one result
+            if (data.items && data.items.length > 0) {
+                const imageUrl = data.items[0].link;
+                const imageElement = document.getElementById('college-image');
+                imageElement.src = imageUrl;
+                imageElement.style.display = 'block';
+            } else {
+                // If no logo is found, hide the image
+                document.getElementById('college-image').style.display = 'none';
+            }
+        } catch (error) {
+            console.error("Error fetching college image:", error);
+            document.getElementById('college-image').style.display = 'none'; // Hide image on error
+        }
     }
+
+    // Handle "Go" button click
+    goButton.addEventListener("click", function () {
+        if (selectedCollegeIndex !== -1) {
+            // Update the "View College Website" button with the correct link
+            const link = collegeLinks[selectedCollegeIndex];
+
+            // Make the "View College Website" button visible and update its link
+            collegeWebsiteButton.style.display = "inline-block";
+            collegeWebsiteButton.setAttribute("onclick", `window.open('${link}', '_blank')`);
+        } else {
+            alert("Please select a college first!");
+        }
+    });
+
+    // Handle "Calculate Cost" button click
+    calculateBtn.addEventListener("click", function () {
+        const collegeName = collegeSearchInput.value.trim();
+        const residency = residencySelect.value;
+
+        if (collegeName === "") {
+            alert("Please select a college!");
+            return;
+        }
+
+        // For simplicity, we'll use a static cost for each college
+        const tuitionCost = residency === "in-state" ? 10000 : 20000;
+        const totalCost = tuitionCost + 5000; // Add some additional costs (e.g., housing, food)
+
+        // Display total cost
+        costDisplay.textContent = `Total Cost for ${collegeName}: $${totalCost.toFixed(2)}`;
+    });
+
+    // Call the function to fetch colleges data on page load
+    fetchColleges();
 });
-
-document.getElementById('continue-btn').addEventListener('click', function() {
-    document.getElementById('intro-page').style.display = 'none';
-    document.getElementById('main-app').style.display = 'flex';
-});
-
-
-
-fetchCollegesData();
