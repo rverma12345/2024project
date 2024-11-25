@@ -1,3 +1,4 @@
+//d
 document.addEventListener("DOMContentLoaded", function () {
     const continueBtn = document.getElementById("continue-btn");
     const introPage = document.getElementById("intro-page");
