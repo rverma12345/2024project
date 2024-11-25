@@ -17,6 +17,8 @@ document.addEventListener("DOMContentLoaded", function () {
     let collegeStates = [];
     let collegePublicPrivate = [];
     let selectedCollegeIndex = -1;
+    let collegeMascots = [];
+
 
     // Google API credentials
     const googleApiKey = "AIzaSyByIj5HheJZEZh-yl0Htqb8tjLNQvRG0gg"; // Replace with your Google API Key
@@ -26,7 +28,7 @@ document.addEventListener("DOMContentLoaded", function () {
     const fetchColleges = async () => {
         const apiKey = "AIzaSyCfrP-vedjtT-jxoXR9Adco8YUV2cRyUaY"; // Replace with your actual API Key
         const spreadsheetId = "1SCwi8zWoxq9pa2LSmu0dfcakdju8RCYZ7n51_Fgprfc"; // Replace with your spreadsheet ID
-        const range = "Sheet1!A:H"; // Fetch columns A (college names), B (URLs), C (Cities), D (States), H (Public/Private)
+        const range = "Sheet1!A:M"; // Fetch columns A (college names), B (URLs), C (Cities), D (States), H (Public/Private)
         const url = `https://sheets.googleapis.com/v4/spreadsheets/${spreadsheetId}/values/${range}?key=${apiKey}`;
 
         try {
@@ -38,6 +40,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 collegeCities = data.values.map(row => row[2]); // Column C: city
                 collegeStates = data.values.map(row => row[3]); // Column D: state
                 collegePublicPrivate = data.values.map(row => row[7]); // Column H: public/private status
+                collegeMascots = data.values.map(row => row[12]); // Column M: mascots
             }
         } catch (error) {
             console.error("Error fetching college names and links from Google Sheets:", error);
@@ -86,18 +89,21 @@ document.addEventListener("DOMContentLoaded", function () {
                     // Make the "Go" button visible
                     goButton.style.display = 'inline-block';
 
-                    // Display the college name and city/state
+                    // Display the college name, location, public/private status, and mascot
                     const collegeName = colleges[selectedCollegeIndex];
                     const city = collegeCities[selectedCollegeIndex];
                     const state = collegeStates[selectedCollegeIndex];
                     const publicPrivate = collegePublicPrivate[selectedCollegeIndex];
+                    const mascot = collegeMascots[selectedCollegeIndex];
                     document.getElementById('college-name').textContent = collegeName;
                     document.getElementById('college-location').textContent = `${city}, ${state}`;
                     document.getElementById('public-private-status').textContent = publicPrivate;
+                    document.getElementById('college-mascot').textContent = `Mascot: ${mascot || 'N/A'}`;
 
                     // Fetch image from Google API
                     fetchCollegeImage(collegeName);
                 });
+
 
                 suggestionsContainer.appendChild(suggestionItem);
             });
