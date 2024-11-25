@@ -127,7 +127,6 @@ button:hover {
 @media (max-width: 768px) {
     .intro-container h1 {
         font-size: 2.5rem;
-    
     }
 
     .main-container {
@@ -139,23 +138,32 @@ button:hover {
     }
 }
 
-/* Change the color of the college name to black */
-.college-name {
+/* Dropdown and Suggestions Styles */
+select {
     color: black;
-    font-size: 24px;
-    font-weight: bold;
 }
 
-/* Change the color of the city and state to black */
-.college-location {
+.suggestion {
+    background-color: #fff;
     color: black;
-    font-size: 18px;
-    font-style: italic;
+    padding: 10px;
+    cursor: pointer;
 }
 
-/* Change the color of the public/private status to black */
-.college-public-status {
+.suggestion:hover {
+    background-color: #007bff;
+    color: white;
+}
+
+/* College Info */
+.college-name, .college-location, .college-public-status {
     color: black;
     font-size: 16px;
-    font-weight: bold;
 }
+
+.college-mascot {
+    font-size: 16px;
+    color: #000000;
+    margin-top: 5px;
+}
+
