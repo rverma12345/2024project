@@ -1,5 +1,4 @@
 document.addEventListener("DOMContentLoaded", function () {
-    const continueBtn = document.getElementById("continue-btn");
     const introPage = document.getElementById("intro-page");
     const mainApp = document.getElementById("main-app");
     const collegeSearchInput = document.getElementById("college-search");
@@ -10,6 +9,10 @@ document.addEventListener("DOMContentLoaded", function () {
     const collegeButtonsContainer = document.getElementById("college-buttons-container");
     const goButton = document.getElementById("go-button");
     const collegeWebsiteButton = document.getElementById("college-website-button");
+    const favoriteButton = document.getElementById("favorite-button");
+    const favoritesTab = document.getElementById("favorites-tab");
+    const closeFavoritesButton = document.getElementById("close-favorites");
+    const favoritesList = document.getElementById("favorites-list");
 
     let colleges = [];
     let collegeLinks = [];
@@ -18,6 +21,7 @@ document.addEventListener("DOMContentLoaded", function () {
     let collegePublicPrivate = [];
     let selectedCollegeIndex = -1;
     let collegeMascots = [];
+    let favorites = [];
 
     // Google API credentials
     const googleApiKey = "AIzaSyByIj5HheJZEZh-yl0Htqb8tjLNQvRG0gg"; // Replace with your Google API Key
@@ -46,11 +50,24 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     };
 
-    // Handle the "Continue" button click
-    continueBtn.addEventListener("click", function () {
-        introPage.style.display = "none";
-        mainApp.style.display = "flex";
+    // Handle any key press to continue
+    document.addEventListener("keydown", function (event) {
+        if (introPage.style.display !== "none") {
+            introPage.style.display = "none";
+            mainApp.style.display = "flex";
+            animateElements();
+        }
     });
+
+    // Animate elements sequentially
+    function animateElements() {
+        const elements = document.querySelectorAll('.animated-element');
+        elements.forEach((element, index) => {
+            setTimeout(() => {
+                element.style.animation = 'slideIn 0.5s forwards';
+            }, index * 500);
+        });
+    }
 
     // Handle college search input
     collegeSearchInput.addEventListener("input", function () {
@@ -70,7 +87,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
         suggestionsContainer.innerHTML = ''; // Clear previous suggestions
         if (filteredColleges.length === 0) {
-            suggestionsContainer.innerHTML = '<div>No results found</div>';
+            suggestionsContainer.innerHTML = '<div class="suggestion-item">No results found</div>';
         } else {
             filteredColleges.forEach((college) => {
                 const suggestionItem = document.createElement('div');
@@ -101,6 +118,17 @@ document.addEventListener("DOMContentLoaded", function () {
 
                     // Fetch image from Google API
                     fetchCollegeImage(collegeName);
+
+                    // Make the favorite button visible
+                    favoriteButton.style.display = 'inline-block';
+
+                    // Check if the selected college is in favorites
+                    const isFavorite = favorites.some(fav => fav.name === collegeName);
+                    if (isFavorite) {
+                        favoriteButton.classList.add('active');
+                    } else {
+                        favoriteButton.classList.remove('active');
+                    }
                 });
 
                 suggestionsContainer.appendChild(suggestionItem);
@@ -165,6 +193,79 @@ document.addEventListener("DOMContentLoaded", function () {
         costDisplay.textContent = `Total Cost: $${baseCost.toFixed(2)}`;
     });
 
+    // Initialize Lucide icons
+    lucide.createIcons();
+
+    // Function to toggle favorite status
+    function toggleFavorite() {
+        if (selectedCollegeIndex !== -1) {
+            const college = {
+                name: colleges[selectedCollegeIndex],
+                location: `${collegeCities[selectedCollegeIndex]}, ${collegeStates[selectedCollegeIndex]}`,
+                publicPrivate: collegePublicPrivate[selectedCollegeIndex],
+                mascot: collegeMascots[selectedCollegeIndex] || 'N/A'
+            };
+
+            const index = favorites.findIndex(fav => fav.name === college.name);
+            if (index === -1) {
+                favorites.push(college);
+                favoriteButton.classList.add('active');
+            } else {
+                favorites.splice(index, 1);
+                favoriteButton.classList.remove('active');
+            }
+
+            updateFavoritesList();
+        }
+    }
+
+    // Function to update favorites list
+    function updateFavoritesList() {
+        favoritesList.innerHTML = '';
+        favorites.forEach(college => {
+            const item = document.createElement('div');
+            item.classList.add('favorite-item');
+            item.innerHTML = `
+                <h4>${college.name}</h4>
+                <p>${college.location}</p>
+                <p>${college.publicPrivate}</p>
+                <p>Mascot: ${college.mascot}</p>
+            `;
+            favoritesList.appendChild(item);
+        });
+    }
+
+    // Event listener for favorite button
+    favoriteButton.addEventListener('click', toggleFavorite);
+
+    // Event listener for closing favorites tab
+    closeFavoritesButton.addEventListener('click', function() {
+        favoritesTab.classList.remove('open');
+        document.querySelector('.main-container').classList.remove('shifted');
+    });
+
+
+    // Add a function to toggle the favorites tab
+    function toggleFavoritesTab() {
+        favoritesTab.classList.toggle('open');
+        document.querySelector('.main-container').classList.toggle('shifted');
+    }
+
+    // Add event listener to the favorite button for opening the favorites tab
+    favoriteButton.addEventListener('click', function(event) {
+        event.stopPropagation(); // Prevent the click from closing the tab immediately
+        toggleFavoritesTab();
+    });
+
+    // Close the favorites tab when clicking outside of it
+    document.addEventListener('click', function(event) {
+        if (!favoritesTab.contains(event.target) && !favoriteButton.contains(event.target)) {
+            favoritesTab.classList.remove('open');
+            document.querySelector('.main-container').classList.remove('shifted');
+        }
+    });
+
     // Initialize the app
     fetchColleges();
 });
+
