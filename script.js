@@ -1,4 +1,3 @@
-//d
 document.addEventListener("DOMContentLoaded", function () {
     const continueBtn = document.getElementById("continue-btn");
     const introPage = document.getElementById("intro-page");
@@ -19,7 +18,6 @@ document.addEventListener("DOMContentLoaded", function () {
     let collegePublicPrivate = [];
     let selectedCollegeIndex = -1;
     let collegeMascots = [];
-
 
     // Google API credentials
     const googleApiKey = "AIzaSyByIj5HheJZEZh-yl0Htqb8tjLNQvRG0gg"; // Replace with your Google API Key
@@ -104,7 +102,6 @@ document.addEventListener("DOMContentLoaded", function () {
                     // Fetch image from Google API
                     fetchCollegeImage(collegeName);
                 });
-
 
                 suggestionsContainer.appendChild(suggestionItem);
             });
