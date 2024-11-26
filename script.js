@@ -12,6 +12,7 @@ document.addEventListener("DOMContentLoaded", function () {
     const collegeInfo = document.getElementById("college-info");
     const collegeWebsiteButton = document.getElementById("college-website-button");
     const favoritesContainer = document.getElementById("favorites-container");
+    const mapContainer = document.getElementById("map-container");
 
     let colleges = [];
     let collegeLinks = [];
@@ -21,10 +22,7 @@ document.addEventListener("DOMContentLoaded", function () {
     let selectedCollegeIndex = -1;
     let collegeMascots = [];
     let favorites = [];
-
-    // Google API credentials
-    const googleApiKey = "AIzaSyByIj5HheJZEZh-yl0Htqb8tjLNQvRG0gg"; // Replace with your Google API Key
-    const googleCx = "057634c68697e4dfc"; // Replace with your Custom Search Engine ID
+    let map = null;
 
     // Fetch college names and links from Google Sheets
     const fetchColleges = async () => {
@@ -116,6 +114,9 @@ document.addEventListener("DOMContentLoaded", function () {
 
         collegeInfo.style.display = 'block';
         collegeWebsiteButton.onclick = () => window.open(collegeLinks[selectedCollegeIndex], '_blank');
+
+        // Update map with college location
+        updateMap(city, state);
     }
 
     // Handle residency selection
@@ -193,7 +194,38 @@ document.addEventListener("DOMContentLoaded", function () {
         favoriteBtn.classList.toggle('active', isFavorite);
     }
 
+    // Function to update the map with college location
+    async function updateMap(city, state) {
+        mapContainer.style.display = 'block';
+
+        if (!map) {
+            map = L.map('map-container').setView([0, 0], 13);
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+            }).addTo(map);
+        }
+
+        try {
+            const response = await fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(city + ', ' + state)}`);
+            const data = await response.json();
+
+            if (data && data.length > 0) {
+                const lat = parseFloat(data[0].lat);
+                const lon = parseFloat(data[0].lon);
+                map.setView([lat, lon], 13);
+                L.marker([lat, lon]).addTo(map)
+                    .bindPopup(colleges[selectedCollegeIndex])
+                    .openPopup();
+            } else {
+                console.error('Location not found');
+            }
+        } catch (error) {
+            console.error('Error fetching location data:', error);
+        }
+    }
+
     // Initialize the app
     fetchColleges();
     lucide.createIcons();
 });
+
