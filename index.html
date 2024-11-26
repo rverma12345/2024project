@@ -6,6 +6,8 @@
     <title>UrCollege - Find Your Perfect College Match</title>
     <link rel="stylesheet" href="style.css">
     <script src="https://unpkg.com/lucide@latest"></script>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
 </head>
 <body>
     <!-- Intro Page -->
@@ -44,6 +46,7 @@
             <p id="college-public-status"></p>
             <button id="college-website-button" class="view-college-button">Explore Campus</button>
         </div>
+        <div id="map-container" class="map-container" style="display: none;"></div>
     </div>
 
     <!-- Favorites Container -->
