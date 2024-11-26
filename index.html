@@ -3,73 +3,55 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>College Cost Calculator</title>
+    <title>UrCollege - Find Your Perfect College Match</title>
     <link rel="stylesheet" href="style.css">
     <script src="https://unpkg.com/lucide@latest"></script>
 </head>
 <body>
     <!-- Intro Page -->
     <div id="intro-page" class="intro-container">
-        <h1>College Cost Calculator</h1>
-        <p>This tool helps you estimate the total costs of attending college, including tuition, housing, food, and more.</p>
-        <p>Press any key to continue</p>
+        <h1>UrCollege</h1>
+        <p>Discover the college that's right for you. Compare costs, explore campuses, and make informed decisions about your future.</p>
+        <button id="continue-btn">Get Started</button>
     </div>
 
     <!-- Main App Page -->
     <div id="main-app" class="main-container" style="display: none;">
-        <h2>College Cost Calculator</h2>
+        <h2>UrCollege</h2>
         <div id="search-container" class="animated-element">
             <label for="college-search">Search for a College:</label>
             <input type="text" id="college-search" placeholder="Start typing to search...">
             <div id="suggestions"></div>
         </div>
-        <div id="residency-container" class="animated-element">
+        <div id="residency-container" class="animated-element" style="display: none;">
             <label for="residency-select">Select Residency Status:</label>
             <select id="residency-select">
                 <option value="in-state">In State</option>
                 <option value="out-of-state">Out of State</option>
+                <option value="international">International</option>
             </select>
         </div>
-        <div id="calculate-container" class="animated-element">
+        <div id="calculate-container" class="animated-element" style="display: none;">
             <button id="calculate-btn">Calculate Cost</button>
-            <p id="cost-display">Total Cost: $0.00</p>
         </div>
-        <div id="college-buttons-container" class="animated-element">
-            <button id="go-button" style="display: none;">Go</button>
-            <button id="college-website-button" class="view-college-button" style="display: none;" target="_blank">View College Website</button>
-            <button id="favorite-button" class="favorite-button" style="display: none;">
-                <i data-lucide="star"></i>
-            </button>
+        <div id="cost-display" class="animated-element" style="display: none;">
+            Total Cost: $0.00
         </div>
-        <div id="college-info" class="college-info animated-element">
-            <p id="college-name" class="college-name"></p>
-            <p id="college-location" class="college-location"></p>
-            <p id="college-mascot" class="college-mascot"></p>
-            <p id="college-public-status" class="college-public-status">
-                <img id="grad-hat" src="gradhat.png" alt="grad hat" style="width: 20px; margin-right: 5px;"> 
-                <span id="public-private-status"></span>
-            </p>
+        <div id="college-info" class="college-info animated-element" style="display: none;">
+            <h3 id="college-name"></h3>
+            <p id="college-location"></p>
+            <p id="college-mascot"></p>
+            <p id="college-public-status"></p>
+            <button id="college-website-button" class="view-college-button">Explore Campus</button>
         </div>
     </div>
 
-    <!-- Favorites Side Tab -->
-    <div id="favorites-tab" class="favorites-tab">
-        <div class="favorites-header">
-            <h3>Favorited Colleges</h3>
-            <button id="close-favorites" class="close-favorites">
-                <i data-lucide="x"></i>
-            </button>
-        </div>
-        <div id="favorites-list"></div>
-    </div>
+    <!-- Favorites Container -->
+    <div id="favorites-container"></div>
 
     <!-- Loading Spinner -->
     <div id="loading-spinner" style="display: none;">Loading...</div>
 
-    <!-- Google Map Container -->
-    <div id="map" style="width: 100%; height: 400px; display: none;"></div>
-
     <script src="script.js"></script>
 </body>
 </html>
-
