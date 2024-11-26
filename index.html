@@ -5,34 +5,43 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>College Cost Calculator</title>
     <link rel="stylesheet" href="style.css">
+    <script src="https://unpkg.com/lucide@latest"></script>
 </head>
 <body>
-
     <!-- Intro Page -->
     <div id="intro-page" class="intro-container">
         <h1>College Cost Calculator</h1>
         <p>This tool helps you estimate the total costs of attending college, including tuition, housing, food, and more.</p>
-        <button id="continue-btn">Continue</button>
+        <p>Press any key to continue</p>
     </div>
 
     <!-- Main App Page -->
     <div id="main-app" class="main-container" style="display: none;">
         <h2>College Cost Calculator</h2>
-        <label for="college-search">Search for a College:</label>
-        <input type="text" id="college-search" placeholder="Start typing to search...">
-        <div id="suggestions"></div>
-        <label for="residency-select">Select Residency Status:</label>
-        <select id="residency-select">
-            <option value="in-state">In State</option>
-            <option value="out-of-state">Out of State</option>
-        </select>
-        <button id="calculate-btn">Calculate Cost</button>
-        <p id="cost-display">Total Cost: $0.00</p>
-        <div id="college-buttons-container">
+        <div id="search-container" class="animated-element">
+            <label for="college-search">Search for a College:</label>
+            <input type="text" id="college-search" placeholder="Start typing to search...">
+            <div id="suggestions"></div>
+        </div>
+        <div id="residency-container" class="animated-element">
+            <label for="residency-select">Select Residency Status:</label>
+            <select id="residency-select">
+                <option value="in-state">In State</option>
+                <option value="out-of-state">Out of State</option>
+            </select>
+        </div>
+        <div id="calculate-container" class="animated-element">
+            <button id="calculate-btn">Calculate Cost</button>
+            <p id="cost-display">Total Cost: $0.00</p>
+        </div>
+        <div id="college-buttons-container" class="animated-element">
             <button id="go-button" style="display: none;">Go</button>
             <button id="college-website-button" class="view-college-button" style="display: none;" target="_blank">View College Website</button>
+            <button id="favorite-button" class="favorite-button" style="display: none;">
+                <i data-lucide="star"></i>
+            </button>
         </div>
-        <div id="college-info" class="college-info">
+        <div id="college-info" class="college-info animated-element">
             <p id="college-name" class="college-name"></p>
             <p id="college-location" class="college-location"></p>
             <p id="college-mascot" class="college-mascot"></p>
@@ -41,6 +50,17 @@
                 <span id="public-private-status"></span>
             </p>
         </div>
+    </div>
+
+    <!-- Favorites Side Tab -->
+    <div id="favorites-tab" class="favorites-tab">
+        <div class="favorites-header">
+            <h3>Favorited Colleges</h3>
+            <button id="close-favorites" class="close-favorites">
+                <i data-lucide="x"></i>
+            </button>
+        </div>
+        <div id="favorites-list"></div>
     </div>
 
     <!-- Loading Spinner -->
@@ -52,3 +72,4 @@
     <script src="script.js"></script>
 </body>
 </html>
+
