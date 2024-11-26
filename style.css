@@ -6,15 +6,11 @@
 }
 
 body {
-    font-family: 'Arial', sans-serif;
-    background-color: #000000;
-    color: #ffffff;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+    background-color: #0f172a;
+    color: #e2e8f0;
     line-height: 1.6;
     overflow-x: hidden;
-    transition: background-color 0.3s ease;
-    display: flex;
-    justify-content: center;
-    align-items: center;
     min-height: 100vh;
 }
 
@@ -32,95 +28,103 @@ body.no-scroll {
     justify-content: center;
     align-items: center;
     height: 100vh;
-    background-color: #000000;
-    color: #ffffff;
-    border-radius: 8px;
-    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+    background-color: #0f172a;
+    color: #e2e8f0;
     opacity: 0;
     animation: fadeIn 1s forwards;
 }
 
 .intro-container h1 {
-    font-size: 3rem;
-    font-weight: 700;
-    color: #007bff;
+    font-size: 3.5rem;
+    font-weight: 800;
+    color: #60a5fa;
     margin-bottom: 20px;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 .intro-container p {
-    font-size: 1.5rem;
-    color: #ffffff;
+    font-size: 1.25rem;
+    color: #94a3b8;
     margin-bottom: 30px;
+    max-width: 600px;
 }
 
 /* Main App */
 .main-container {
     display: flex;
     flex-direction: column;
-    justify-content: center;
     align-items: center;
-    background-color: #ffffff;
-    padding: 40px;
-    border-radius: 8px;
-    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
-    opacity: 0;
-    animation: fadeIn 1s forwards 0.5s;
+    padding: 40px 20px;
+    min-height: 100vh;
     width: 100%;
-    max-width: 800px;
+    max-width: 1200px;
     margin: auto;
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
+    transition: margin-right 0.3s ease;
+}
+
+.main-container.shifted {
+    margin-right: 300px;
 }
 
 h2 {
-    font-size: 2rem;
-    color: #007bff;
-    font-weight: 600;
-    margin-bottom: 1.5rem;
+    font-size: 2.5rem;
+    color: #60a5fa;
+    font-weight: 700;
+    margin-bottom: 2rem;
+    text-align: center;
 }
 
 /* Form Inputs */
 input, select, button {
-    width: 80%;
+    width: 100%;
     max-width: 400px;
-    padding: 14px;
+    padding: 12px 16px;
     margin-bottom: 20px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
+    border: 1px solid #4b5563;
+    border-radius: 8px;
     font-size: 1rem;
-    color: #2d3e50;
+    color: #e2e8f0;
+    background-color: #1e293b;
     transition: all 0.3s ease;
-    text-align: center;
+}
+
+input::placeholder {
+    color: #64748b;
 }
 
 input:focus, select:focus, button:focus {
     outline: none;
-    border-color: #007bff;
-    box-shadow: 0 0 4px rgba(0, 123, 255, 0.5);
+    border-color: #60a5fa;
+    box-shadow: 0 0 0 2px rgba(96, 165, 250, 0.2);
 }
 
 button {
-    background-color: #28a745;
-    color: #fff;
+    background-color: #3b82f6;
+    color: #ffffff;
     font-weight: 600;
     cursor: pointer;
-    transition: background-color 0.3s ease;
+    transition: background-color 0.3s ease, transform 0.2s ease;
 }
 
 button:hover {
-    background-color: #218838;
+    background-color: #2563eb;
     transform: translateY(-2px);
+}
+
+button:active {
+    transform: translateY(0);
 }
 
 /* Cost Display */
 #cost-display {
     font-size: 1.5rem;
-    font-weight: 600;
-    color: #28a745;
-    opacity: 0;
-    animation: fadeIn 1s forwards 1s;
+    font-weight: 700;
+    color: #60a5fa;
+    background-color: #1e293b;
+    padding: 16px 24px;
+    border-radius: 8px;
+    margin-top: 20px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
 /* Keyframes for Animations */
@@ -133,45 +137,260 @@ button:hover {
     }
 }
 
+@keyframes slideIn {
+    0% {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    100% {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Animated Elements */
+.animated-element {
+    opacity: 0;
+    transform: translateY(20px);
+}
+
+/* Dropdown and Suggestions Styles */
+#suggestions {
+    background-color: #1e293b;
+    border: 1px solid #4b5563;
+    border-top: none;
+    max-height: 200px;
+    overflow-y: auto;
+    width: 100%;
+    max-width: 400px;
+    border-radius: 0 0 8px 8px;
+}
+
+.suggestion-item {
+    padding: 12px 16px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.suggestion-item:hover {
+    background-color: #2d3748;
+}
+
+/* College Info */
+.college-info {
+    text-align: center;
+    margin-top: 30px;
+    background-color: #1e293b;
+    padding: 24px;
+    border-radius: 12px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.college-name, .college-location, .college-public-status, .college-mascot {
+    margin-bottom: 12px;
+}
+
+.college-name {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #60a5fa;
+}
+
+/* Responsive Design */
 @media (max-width: 768px) {
     .intro-container h1 {
         font-size: 2.5rem;
     }
 
     .main-container {
-        padding: 30px;
+        padding: 20px;
     }
 
     input, select, button {
-        font-size: 1rem;
+        font-size: 0.9rem;
     }
 }
 
-/* Dropdown and Suggestions Styles */
-select {
-    color: black;
+/* Labels */
+label {
+    display: block;
+    margin-bottom: 8px;
+    color: #94a3b8;
+    font-weight: 500;
 }
 
-.suggestion {
-    background-color: #fff;
-    color: black;
-    padding: 10px;
+/* Center search bar and other elements */
+#search-container, #residency-container, #calculate-container, #college-buttons-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    max-width: 400px;
+    margin-bottom: 24px;
+}
+
+/* Favorite Button */
+.favorite-button {
+    background-color: transparent;
+    border: none;
+    color: #94a3b8;
+    font-size: 1.5rem;
     cursor: pointer;
+    transition: color 0.3s ease, transform 0.2s ease;
+    padding: 8px;
+    margin-left: 8px;
 }
 
-.suggestion:hover {
-    background-color: #007bff;
-    color: white;
+.favorite-button:hover {
+    color: #fbbf24;
+    transform: scale(1.1);
 }
 
-/* College Info */
-.college-name, .college-location, .college-public-status {
-    color: black;
-    font-size: 16px;
+.favorite-button.active {
+    color: #fbbf24;
 }
 
-.college-mascot {
-    font-size: 16px;
-    color: #000000;
-    margin-top: 5px;
+/* Favorites Side Tab */
+.favorites-tab {
+    position: fixed;
+    top: 0;
+    right: -300px;
+    width: 300px;
+    height: 100vh;
+    background-color: #1e293b;
+    box-shadow: -2px 0 5px rgba(0, 0, 0, 0.3);
+    transition: right 0.3s ease;
+    z-index: 1000;
+    overflow-y: auto;
 }
+
+.favorites-tab.open {
+    right: 0;
+}
+
+.favorites-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 16px;
+    background-color: #0f172a;
+    border-bottom: 1px solid #2d3748;
+}
+
+.favorites-header h3 {
+    color: #60a5fa;
+    margin: 0;
+    font-size: 1.25rem;
+    font-weight: 600;
+}
+
+.close-favorites {
+    background-color: transparent;
+    border: none;
+    color: #94a3b8;
+    font-size: 1.5rem;
+    cursor: pointer;
+    transition: color 0.3s ease;
+}
+
+.close-favorites:hover {
+    color: #e2e8f0;
+}
+
+#favorites-list {
+    padding: 16px;
+}
+
+.favorite-item {
+    background-color: #2d3748;
+    border-radius: 8px;
+    padding: 16px;
+    margin-bottom: 16px;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.favorite-item:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.favorite-item h4 {
+    color: #60a5fa;
+    margin: 0 0 8px 0;
+    font-size: 1.1rem;
+    font-weight: 600;
+}
+
+.favorite-item p {
+    margin: 0 0 4px 0;
+    font-size: 0.9rem;
+    color: #94a3b8;
+}
+
+/* Additional styles for better aesthetics */
+#college-buttons-container {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    gap: 12px;
+    margin-top: 20px;
+}
+
+#go-button, #college-website-button {
+    flex: 1;
+    max-width: 200px;
+}
+
+#college-website-button {
+    background-color: #4b5563;
+}
+
+#college-website-button:hover {
+    background-color: #374151;
+}
+
+/* Improve visibility of college info */
+#college-public-status {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+}
+
+#grad-hat {
+    width: 24px;
+    height: 24px;
+    filter: invert(1);
+}
+
+/* Add smooth scrolling for a better user experience */
+html {
+    scroll-behavior: smooth;
+}
+
+/* Improve visibility of the loading spinner */
+#loading-spinner {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(15, 23, 42, 0.8);
+    z-index: 9999;
+    font-size: 1.5rem;
+    color: #60a5fa;
+}
+
+/* Style the Google Map container */
+#map {
+    width: 100%;
+    height: 400px;
+    margin-top: 30px;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
