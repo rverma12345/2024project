@@ -45,12 +45,31 @@
             <p id="college-mascot"></p>
             <p id="college-public-status"></p>
             <button id="college-website-button" class="view-college-button">Explore Campus</button>
+            <button id="favorite-btn" class="favorite-btn">
+                <i data-lucide="star" class="star-icon"></i>
+            </button>
         </div>
         <div id="map-container" class="map-container" style="display: none;"></div>
     </div>
 
     <!-- Favorites Container -->
-    <div id="favorites-container"></div>
+    <div id="favorites-categories" style="display: none;">
+        <h3>Favorited Colleges</h3>
+        <div class="categories-container">
+            <div class="category">
+                <h4>Safety</h4>
+                <div id="safety-list" class="college-list"></div>
+            </div>
+            <div class="category">
+                <h4>Target</h4>
+                <div id="target-list" class="college-list"></div>
+            </div>
+            <div class="category">
+                <h4>Reach</h4>
+                <div id="reach-list" class="college-list"></div>
+            </div>
+        </div>
+    </div>
 
     <!-- Loading Spinner -->
     <div id="loading-spinner" style="display: none;">Loading...</div>
