@@ -11,7 +11,7 @@ document.addEventListener("DOMContentLoaded", function () {
     const residencySelect = document.getElementById("residency-select");
     const collegeInfo = document.getElementById("college-info");
     const collegeWebsiteButton = document.getElementById("college-website-button");
-    const favoritesContainer = document.getElementById("favorites-container");
+    const favoriteBtn = document.getElementById("favorite-btn");
     const mapContainer = document.getElementById("map-container");
 
     let colleges = [];
@@ -23,6 +23,12 @@ document.addEventListener("DOMContentLoaded", function () {
     let collegeMascots = [];
     let favorites = [];
     let map = null;
+
+    let favoritesCategories = {
+        safety: [],
+        target: [],
+        reach: []
+    };
 
     // Fetch college names and links from Google Sheets
     const fetchColleges = async () => {
@@ -117,6 +123,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
         // Update map with college location
         updateMap(city, state);
+        updateFavoriteButton();
     }
 
     // Handle residency selection
@@ -143,51 +150,87 @@ document.addEventListener("DOMContentLoaded", function () {
     function toggleFavorite(college) {
         const index = favorites.findIndex(fav => fav.name === college.name);
         if (index === -1) {
-            favorites.push(college);
+            showCategorySelection(college);
         } else {
-            favorites.splice(index, 1);
+            removeFavorite(college);
         }
+    }
+
+    function showCategorySelection(college) {
+        const categorySelection = document.createElement('div');
+        categorySelection.classList.add('category-selection');
+        categorySelection.innerHTML = `
+            <p>Choose a category for ${college.name}:</p>
+            <button class="category-btn" data-category="safety">Safety</button>
+            <button class="category-btn" data-category="target">Target</button>
+            <button class="category-btn" data-category="reach">Reach</button>
+        `;
+
+        categorySelection.querySelectorAll('.category-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const category = btn.dataset.category;
+                addToCategory(college, category);
+                document.body.removeChild(categorySelection);
+            });
+        });
+
+        document.body.appendChild(categorySelection);
+    }
+
+    function addToCategory(college, category) {
+        favorites.push(college);
+        favoritesCategories[category].push(college);
         updateFavoritesList();
+    }
+
+    function removeFavorite(college) {
+        const index = favorites.findIndex(fav => fav.name === college.name);
+        if (index !== -1) {
+            favorites.splice(index, 1);
+            for (const category in favoritesCategories) {
+                const catIndex = favoritesCategories[category].findIndex(fav => fav.name === college.name);
+                if (catIndex !== -1) {
+                    favoritesCategories[category].splice(catIndex, 1);
+                    break;
+                }
+            }
+            updateFavoritesList();
+        }
     }
 
     // Function to update favorites list
     function updateFavoritesList() {
-        favoritesContainer.innerHTML = '';
-        favorites.forEach(college => {
-            const item = document.createElement('div');
-            item.classList.add('favorite-item');
-            item.innerHTML = `
-                <h4>${college.name}</h4>
-                <p>${college.location}</p>
-                <p>${college.publicPrivate}</p>
-                <p>Mascot: ${college.mascot}</p>
-                <button class="unfavorite-btn">
-                    <i data-lucide="star" class="star-icon"></i>
-                </button>
-            `;
-            const unfavoriteBtn = item.querySelector('.unfavorite-btn');
-            unfavoriteBtn.addEventListener('click', () => toggleFavorite(college));
-            favoritesContainer.appendChild(item);
-        });
-        lucide.createIcons();
+        const favoritesCategoriesContainer = document.getElementById('favorites-categories');
+        favoritesCategoriesContainer.style.display = favorites.length > 0 ? 'block' : 'none';
+
+        for (const category in favoritesCategories) {
+            const categoryList = document.getElementById(`${category}-list`);
+            categoryList.innerHTML = '';
+            favoritesCategories[category].forEach(college => {
+                const item = createFavoriteItem(college);
+                categoryList.appendChild(item);
+            });
+        }
+
+        updateFavoriteButton();
     }
 
-    // Add favorite button to college info
-    const favoriteBtn = document.createElement('button');
-    favoriteBtn.classList.add('favorite-btn');
-    favoriteBtn.innerHTML = '<i data-lucide="star" class="star-icon"></i>';
-    collegeInfo.appendChild(favoriteBtn);
-
-    favoriteBtn.addEventListener('click', function() {
-        const college = {
-            name: colleges[selectedCollegeIndex],
-            location: `${collegeCities[selectedCollegeIndex]}, ${collegeStates[selectedCollegeIndex]}`,
-            publicPrivate: collegePublicPrivate[selectedCollegeIndex],
-            mascot: collegeMascots[selectedCollegeIndex] || 'N/A'
-        };
-        toggleFavorite(college);
-        updateFavoriteButton();
-    });
+    function createFavoriteItem(college) {
+        const item = document.createElement('div');
+        item.classList.add('favorite-item');
+        item.innerHTML = `
+            <h4>${college.name}</h4>
+            <p>${college.location}</p>
+            <p>${college.publicPrivate}</p>
+            <p>Mascot: ${college.mascot}</p>
+            <button class="unfavorite-btn">
+                <i data-lucide="star" class="star-icon"></i>
+            </button>
+        `;
+        const unfavoriteBtn = item.querySelector('.unfavorite-btn');
+        unfavoriteBtn.addEventListener('click', () => toggleFavorite(college));
+        return item;
+    }
 
     function updateFavoriteButton() {
         const isFavorite = favorites.some(fav => fav.name === colleges[selectedCollegeIndex]);
@@ -224,8 +267,18 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     }
 
+    // Handle favorite button click
+    favoriteBtn.addEventListener('click', function() {
+        const college = {
+            name: colleges[selectedCollegeIndex],
+            location: `${collegeCities[selectedCollegeIndex]}, ${collegeStates[selectedCollegeIndex]}`,
+            publicPrivate: collegePublicPrivate[selectedCollegeIndex],
+            mascot: collegeMascots[selectedCollegeIndex] || 'N/A'
+        };
+        toggleFavorite(college);
+    });
+
     // Initialize the app
     fetchColleges();
     lucide.createIcons();
 });
-
