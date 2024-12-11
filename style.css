@@ -394,3 +394,50 @@ html {
         height: 300px;
     }
 }
+
+/* Category Styles for Safety, Target, and Reach */
+.category h4 {
+    color: #000000;
+    margin-bottom: 12px;
+    text-align: center;
+    padding: 10px;
+    border-radius: 8px;
+}
+
+#safety-list {
+    background-color: #cefad0; /* Green */
+}
+
+#target-list {
+    background-color: #FFC78F; /* Orange */
+}
+
+#reach-list {
+    background-color: #FF817E; /* Red */
+}
+
+/* Update the category section background colors */
+#favorites-categories .category:nth-child(1) {
+    background-color: #cefad0; /* Safety Green */
+}
+
+#favorites-categories .category:nth-child(2) {
+    background-color: #FFC78F; /* Target Orange */
+}
+
+#favorites-categories .category:nth-child(3) {
+    background-color: #e53e3e; /* Reach Red */
+}
+
+.category {
+    flex: 1;
+    border-radius: 8px;
+    padding: 16px;
+}
+
+.category h4 {
+    color: #000000;
+    margin-bottom: 12px;
+    text-align: center;
+}
+
