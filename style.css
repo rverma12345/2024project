@@ -121,17 +121,6 @@ button:active {
   transform: translateY(0);
 }
 
-/* Cost Display */
-#cost-display {
-  font-size: 1.5rem;
-  font-weight: 700;
-  color: #3182ce;
-  background-color: #ebf8ff;
-  padding: 16px 24px;
-  border-radius: 8px;
-  margin-top: 20px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-}
 
 /* Keyframes for Animations */
 @keyframes fadeIn {
@@ -206,8 +195,8 @@ label {
   font-weight: 500;
 }
 
-/* Center search bar and other elements */
-#search-container, #residency-container, #calculate-container {
+/* Center search bar */
+#search-container {
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -395,7 +384,7 @@ html {
   }
 }
 
-/* Category Styles for Safety, Target, and Reach */
+/* Category Stylesfor Safety, Target, and Reach */
 .category h4 {
   color: #000000;
   margin-bottom: 12px;
@@ -469,3 +458,11 @@ html {
 #add-address-pin:hover {
   background-color: #45a049;
 }
+
+/* Travel Time Display Styles */
+.travel-time {
+  font-size: 0.9rem;
+  color: #4a5568;
+  margin-top: 5px;
+}
+
