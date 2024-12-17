@@ -4,11 +4,6 @@ document.addEventListener("DOMContentLoaded", function () {
   const continueBtn = document.getElementById("continue-btn");
   const collegeSearchInput = document.getElementById("college-search");
   const suggestionsContainer = document.getElementById("suggestions");
-  const residencyContainer = document.getElementById("residency-container");
-  const calculateContainer = document.getElementById("calculate-container");
-  const calculateBtn = document.getElementById("calculate-btn");
-  const costDisplay = document.getElementById("cost-display");
-  const residencySelect = document.getElementById("residency-select");
   const collegeInfo = document.getElementById("college-info");
   const collegeWebsiteButton = document.getElementById("college-website-button");
   const favoriteBtn = document.getElementById("favorite-btn");
@@ -27,6 +22,7 @@ document.addEventListener("DOMContentLoaded", function () {
   let favorites = [];
   let map = null;
   let userMarker = null;
+  let collegeMarkers = [];
 
   let favoritesCategories = {
       safety: [],
@@ -97,9 +93,6 @@ document.addEventListener("DOMContentLoaded", function () {
                   // Set the selected college index
                   selectedCollegeIndex = colleges.indexOf(college);
 
-                  // Show residency selection
-                  residencyContainer.style.display = 'block';
-
                   // Display the college information
                   displayCollegeInfo();
               });
@@ -128,30 +121,11 @@ document.addEventListener("DOMContentLoaded", function () {
       // Update map with college location
       updateMap(city, state);
       updateFavoriteButton();
-      
+
       // Show address input container
       addressContainer.style.display = 'block';
+
   }
-
-  // Handle residency selection
-  residencySelect.addEventListener('change', function() {
-      calculateContainer.style.display = 'block';
-  });
-
-  // Handle "Calculate Cost" button click
-  calculateBtn.addEventListener("click", function () {
-      const residency = residencySelect.value;
-
-      // Placeholder calculation (you can modify it based on real data or cost estimation logic)
-      let baseCost = 30000; // Placeholder base tuition cost
-      if (residency === "out-of-state") {
-          baseCost += 10000; // Additional cost for out-of-state students
-      } else if (residency === "international") {
-          baseCost += 20000; // Additional cost for international students
-      }
-      costDisplay.textContent = `Total Cost: $${baseCost.toFixed(2)}`;
-      costDisplay.style.display = 'block';
-  });
 
   // Function to toggle favorite status
   function toggleFavorite(college) {
@@ -263,9 +237,14 @@ document.addEventListener("DOMContentLoaded", function () {
               const lat = parseFloat(data[0].lat);
               const lon = parseFloat(data[0].lon);
               map.setView([lat, lon], 13);
-              L.marker([lat, lon]).addTo(map)
+              const marker = L.marker([lat, lon]).addTo(map)
                   .bindPopup(colleges[selectedCollegeIndex])
                   .openPopup();
+              collegeMarkers.push(marker);
+
+              if (userMarker) {
+                  calculateAndDisplayTravelTime(userMarker.getLatLng(), [lat, lon], marker);
+              }
           } else {
               console.error('Location not found');
           }
@@ -313,6 +292,11 @@ document.addEventListener("DOMContentLoaded", function () {
                 .openPopup();
 
               map.setView([lat, lon], 10);
+
+              // Recalculate travel times for all college markers
+              collegeMarkers.forEach(marker => {
+                  calculateAndDisplayTravelTime([lat, lon], marker.getLatLng(), marker);
+              });
           } else {
               console.error('Address not found');
               alert('Address not found. Please try a more specific address.');
@@ -323,7 +307,30 @@ document.addEventListener("DOMContentLoaded", function () {
       }
   });
 
+  // Function to calculate and display travel time
+  function calculateAndDisplayTravelTime(origin, destination, marker) {
+      const service = new google.maps.DistanceMatrixService();
+      service.getDistanceMatrix(
+          {
+              origins: [origin],
+              destinations: [destination],
+              travelMode: 'DRIVING',
+              unitSystem: google.maps.UnitSystem.IMPERIAL,
+          },
+          (response, status) => {
+              if (status === 'OK') {
+                  const duration = response.rows[0].elements[0].duration.text;
+                  const currentContent = marker.getPopup().getContent();
+                  marker.setPopupContent(`${currentContent}<br><span class="travel-time">Travel time: ${duration}</span>`);
+              } else {
+                  console.error('Error calculating travel time');
+              }
+          }
+      );
+  }
+
   // Initialize the app
   fetchColleges();
   lucide.createIcons();
 });
+
