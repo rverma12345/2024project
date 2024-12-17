@@ -8,6 +8,7 @@
     <script src="https://unpkg.com/lucide@latest"></script>
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
     <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
+    <script src="https://maps.googleapis.com/maps/api/js?key=YOUR_API_KEY&libraries=places"></script>
 </head>
 <body>
     <!-- Intro Page -->
@@ -24,20 +25,6 @@
             <label for="college-search">Search for a College:</label>
             <input type="text" id="college-search" placeholder="Start typing to search...">
             <div id="suggestions"></div>
-        </div>
-        <div id="residency-container" class="animated-element" style="display: none;">
-            <label for="residency-select">Select Residency Status:</label>
-            <select id="residency-select">
-                <option value="in-state">In State</option>
-                <option value="out-of-state">Out of State</option>
-                <option value="international">International</option>
-            </select>
-        </div>
-        <div id="calculate-container" class="animated-element" style="display: none;">
-            <button id="calculate-btn">Calculate Cost</button>
-        </div>
-        <div id="cost-display" class="animated-element" style="display: none;">
-            Total Cost: $0.00
         </div>
         <div id="college-info" class="college-info animated-element" style="display: none;">
             <h3 id="college-name"></h3>
@@ -83,3 +70,4 @@
     <script src="script.js"></script>
 </body>
 </html>
+
